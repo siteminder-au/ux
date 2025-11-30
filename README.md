@@ -5,7 +5,7 @@ A Vue 3-based prototyping environment for testing and demonstrating SUI componen
 ## Quick Start
 
 ```bash
-cd vue-prototypes
+cd prototypes
 npm install
 npm run dev
 ```
@@ -17,7 +17,7 @@ Open http://localhost:3001
 ```
 prototyping-stub/
 ├── sui-vue3/           # SUI component library
-└── vue-prototypes/     # Vue prototyping environment
+└── prototypes/         # Vue prototyping environment
     ├── src/
     │   ├── App.vue                  # Navigation
     │   ├── prototypes/
@@ -38,7 +38,7 @@ prototyping-stub/
 
 ## Creating a New Prototype
 
-See [vue-prototypes/README.md](vue-prototypes/README.md) for detailed instructions.
+See [prototypes/README.md](prototypes/README.md) for detailed instructions.
 
 Quick version:
 1. Copy `src/prototypes/_template` to a new folder
