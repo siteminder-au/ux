@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import SmIcon from '@sui-icons/app/sm-icon.vue'
-import './main.css'
+import './shared/styles/reset.scss'
 
 const app = createApp(App)
 
