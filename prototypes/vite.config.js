@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
+      '@': resolve(__dirname, './src'),
       '@sui': resolve(__dirname, '../sui-vue3/libs/sui-core/src'),
       '@sui-icons': resolve(__dirname, '../sui-vue3/libs/sui-icons/src')
     }

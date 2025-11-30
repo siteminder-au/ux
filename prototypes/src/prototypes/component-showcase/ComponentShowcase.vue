@@ -92,67 +92,6 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-.prototype-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-}
-
-.intro {
-  color: #666;
-  margin-bottom: 2rem;
-}
-
-.demo-section {
-  margin-bottom: 3rem;
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-h1 {
-  color: #333;
-  margin-bottom: 1rem;
-}
-
-h2 {
-  margin-bottom: 1rem;
-  color: #555;
-}
-
-.component-demo {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-top: 1rem;
-  align-items: flex-start;
-}
-
-/* Fix for button display issue when used in flex containers */
-.component-demo .sm-button {
-  display: inline-flex;
-}
-
-/* jQuery button styles */
-.jquery-button {
-  padding: 10px 20px;
-  background: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s;
-}
-
-.jquery-button:hover {
-  background: #1976D2;
-}
-
-.jquery-button.clicked {
-  background: #4CAF50;
-}
+<style scoped lang="scss">
+@import './styles.scss';
 </style>

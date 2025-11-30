@@ -28,46 +28,49 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+// Option 1: Import shared styles
+@import '@/shared/styles/variables.scss';
+@import '@/shared/styles/mixins.scss';
+
 .prototype-container {
-  max-width: 1200px;
+  max-width: $container-max-width;
   margin: 0 auto;
-  padding: 2rem;
+  padding: $spacing-md;
 }
 
 .intro {
-  color: #666;
-  margin-bottom: 2rem;
+  color: $color-text-muted;
+  margin-bottom: $spacing-md;
 }
 
 .demo-section {
-  margin-bottom: 3rem;
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: $spacing-lg;
+  @include card;
+
+  h2 {
+    margin-bottom: $spacing-sm;
+    color: $color-text-secondary;
+  }
 }
 
 h1 {
-  color: #333;
-  margin-bottom: 1rem;
-}
-
-h2 {
-  margin-bottom: 1rem;
-  color: #555;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
 }
 
 .component-demo {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
-  margin-top: 1rem;
+  margin-top: $spacing-sm;
   align-items: flex-start;
+
+  .sm-button {
+    display: inline-flex;
+  }
 }
 
-/* Fix for button display issue when used in flex containers */
-.component-demo .sm-button {
-  display: inline-flex;
-}
+// Option 2: Or import from separate file
+// @import './styles.scss';
 </style>

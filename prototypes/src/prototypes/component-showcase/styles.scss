@@ -1,0 +1,57 @@
+@import '@/shared/styles/variables.scss';
+@import '@/shared/styles/mixins.scss';
+
+.prototype-container {
+  max-width: $container-max-width;
+  margin: 0 auto;
+  padding: $spacing-md;
+  font-family: $font-family-base;
+}
+
+.intro {
+  color: $color-text-muted;
+  margin-bottom: $spacing-md;
+}
+
+.demo-section {
+  margin-bottom: $spacing-lg;
+  @include card;
+
+  h2 {
+    margin-bottom: $spacing-sm;
+    color: $color-text-secondary;
+  }
+}
+
+h1 {
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.component-demo {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: $spacing-sm;
+  align-items: flex-start;
+
+  // Fix for button display issue when used in flex containers
+  .sm-button {
+    display: inline-flex;
+  }
+}
+
+// jQuery button styles
+.jquery-button {
+  @include button-base;
+  background: $color-primary;
+  color: white;
+
+  &:hover {
+    background: $color-primary-hover;
+  }
+
+  &.clicked {
+    background: $color-success;
+  }
+}
