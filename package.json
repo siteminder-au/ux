@@ -8,7 +8,7 @@
   },
   "scripts": {
     "install": "cd prototypes && npm install",
-    "build": "cd prototypes && npm run build",
+    "build": "cd prototypes && npm run build && cd .. && rm -rf sui-vue3",
     "start": "cd prototypes && npm start"
   }
 }

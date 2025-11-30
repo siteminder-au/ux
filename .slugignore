@@ -1,3 +1,0 @@
-# Exclude sui-vue3 from the final Heroku slug
-# It's needed for building but not for running the app
-sui-vue3/
