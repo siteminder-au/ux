@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "jquery": "^3.7.1",
+    "serve": "^14.2.5",
     "sui-vue3": "github:siteminder-au/sui#vue3",
     "vue": "^3.4.38",
     "vue-demi": "^0.14.10",
