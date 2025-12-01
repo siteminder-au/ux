@@ -9,15 +9,14 @@
     "start": "npx serve dist -s -l 3000"
   },
   "dependencies": {
-    "@vitejs/plugin-vue": "^5.0.3",
     "jquery": "^3.7.1",
-    "sass": "^1.69.5",
-    "serve": "^14.2.4",
-    "vite": "^5.0.11",
     "vue": "^3.4.38",
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.33"
+    "@types/jquery": "^3.5.33",
+    "@vitejs/plugin-vue": "^5.0.3",
+    "sass": "^1.69.5",
+    "vite": "^5.0.11"
   }
 }
