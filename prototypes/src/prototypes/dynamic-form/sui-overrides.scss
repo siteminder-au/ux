@@ -1,0 +1,28 @@
+// ============================================================================
+// SUI COMPONENT OVERRIDES
+// Dynamic form specific overrides for SUI components
+// ============================================================================
+
+:deep(.sm-input__footer) {
+  min-height: 0px;
+  padding: 0;
+}
+
+:deep(.sm-field-error) {
+  min-height: 0px;
+  padding: 0px !important;
+}
+
+:deep(.sm-form-group) {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 36px;
+  gap: 5px;
+
+  legend.sm-p {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    margin-bottom: 8px;
+  }
+}

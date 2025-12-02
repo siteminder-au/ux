@@ -4,6 +4,7 @@ import App from './App.vue'
 import router from './router'
 import globalComponents from './plugins/global-components'
 import './shared/styles/reset.scss'
+import './shared/styles/form-utilities.scss'
 import 'vue-multiselect/dist/vue-multiselect.css'
 import 'floating-vue/dist/style.css'
 // Import SUI base typography styles
