@@ -7,6 +7,8 @@ import './shared/styles/reset.scss'
 import './shared/styles/form-utilities.scss'
 import 'vue-multiselect/dist/vue-multiselect.css'
 import 'floating-vue/dist/style.css'
+// Import SUI core styles (CSS variables and global styles)
+import 'sui-vue3/libs/sui-core/src/app/common/sui-core.scss'
 // Import SUI base typography styles
 import 'sui-vue3/libs/sui-core/src/app/common/typography/base.scss'
 

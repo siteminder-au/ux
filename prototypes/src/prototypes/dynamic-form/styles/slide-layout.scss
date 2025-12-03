@@ -69,33 +69,6 @@
 // These map old class names to new generic classes in form-utilities.scss
 // ============================================================================
 
-.date-range-item {
-  @extend .form-card-item;
-}
-
-.date-range-header {
-  @extend .form-card-header;
-}
-
-.date-range-label {
-  @extend .form-card-label;
-}
-
-.date-range-actions {
-  @extend .form-card-actions;
-}
-
-.date-range-action-btn {
-  @extend .action-btn;
-}
-
-.add-date-range-btn,
-.add-selling-point-btn,
-.add-media-btn,
-.add-item-btn {
-  @extend .add-btn;
-}
-
 .date-range-limit-message,
 .max-selling-points-message {
   @extend .form-helper-message;

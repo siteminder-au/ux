@@ -12,623 +12,665 @@
 
     <div class="slide-right">
       <div class="container-header">Proposed</div>
-      <div class="container-content">
-        <!-- Drawer Header -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-          <div>
-            <h2 style="margin-bottom: 0.25rem;">Edit rate plan</h2>
-            <p style="margin: 0; color: #666;">Advance purchase</p>
-          </div>
-          <div style="display: flex; gap: 1rem;">
-            <SmButton type="secondary" @click="handleCancel">
+
+      <!-- Drawer Header -->
+      <div class="sm-drawer__header">
+        <div class="sm-drawer__header-section sm-drawer__header-section--title">
+          <h2 class="drawer-page-title">Edit rate plan</h2>
+          <p class="drawer-page-subtitle">Advance purchase</p>
+        </div>
+        <div class="sm-drawer__action-buttons">
+          <div class="sm-drawer__header-section sm-drawer__header-section--actions">
+            <SmButton type="tertiary" size="large" @click="handleCancel">
               Cancel
             </SmButton>
-            <SmButton type="primary" native-type="submit" form="rate-plan-form" :disabled="!isFormModified">
+            <SmButton type="primary" size="large" native-type="submit" form="rate-plan-form"
+              :disabled="!isFormModified">
               Save
             </SmButton>
           </div>
         </div>
+      </div>
 
+      <div class="container-content">
         <!-- Form Content -->
         <SmForm id="rate-plan-form" @submit="handleFormSubmit" @invalid-submit="handleInvalidSubmit">
-          <!-- Error Summary Card -->
-          <SmHelpCard v-if="hasErrors" type="warning">
-            <template #header>
-              Please check the following fields for errors.
-            </template>
-            <template #body>
-              <ul class="error-list">
-                <li v-for="field in errorFieldsList" :key="field.name">
-                  <a :href="`#${field.id}`" class="error-link">{{
-                    field.label }}</a>
-                </li>
-              </ul>
-            </template>
-          </SmHelpCard>
+          <div class="form-content-wrapper">
+            <!-- Grid Overlay -->
+            <GridOverlay :show="showGridOverlay" />
 
-          <!-- General Information -->
-          <SmFormGroup id="general-information" legend="GENERAL INFORMATION">
-            <SmInput id="ratePlanName" v-model="ratePlanName" label="Rate plan name" name="ratePlanName"
-              placeholder="Enter rate plan name" />
-
-            <SmInput type="textarea" label="Rate plan description" name="ratePlanDescription"
-              v-model="ratePlanDescription" placeholder="Enter description" :rows="3" />
-          </SmFormGroup>
-
-          <!-- Restrictions and Inclusions -->
-          <SmFormGroup id="restrictions-inclusions" legend="RESTRICTIONS AND INCLUSIONS">
-            <div class="form-row">
-              <div class="form-col">
-                <SmInput v-model="defaultMinStay" label="Default minimum stay" name="defaultMinStay" placeholder="" />
-              </div>
-              <div class="form-col">
-                <SmInput v-model="defaultMaxStay" label="Default maximum stay" name="defaultMaxStay" placeholder="" />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-col">
-                <SmInput v-model="releasePeriod" label="Release period" name="releasePeriod" placeholder="14" />
-              </div>
-              <div class="form-col">
-                <SmSelect v-model="inclusions" label="Inclusions" name="inclusions" :options="inclusionsOptions"
-                  placeholder="None" />
-              </div>
-            </div>
-          </SmFormGroup>
-
-          <!-- Pricing Details -->
-          <SmFormGroup id="pricing-details" legend="PRICING DETAILS">
-            <div class="form-row">
-              <div class="form-col">
-                <SmInput v-model="currency" label="Currency" name="currency" placeholder="Australian Dollar" disabled />
-              </div>
-              <div class="form-col">
-                <SmInput v-model="minimumRate" label="Minimum rate" name="minimumRate" placeholder="" disabled>
-                  <template #prefix>
-                    <SmInputPrefixContent>AUD
-                    </SmInputPrefixContent>
-                  </template>
-                  <template v-slot:suffix>
-                    <sm-button @click="enabled = !enabled" aria-controls="min-rate" type="tertiary" size="large"
-                      :aria-label="enabled ? 'Lock field' : 'Unlock field'"
-                      :title="enabled ? 'Lock field' : 'Unlock field'">
-                      <sm-icon :name="enabled ? 'action-lock-open' : 'action-lock'" />
-                    </sm-button>
-                  </template>
-                  <template #action>
-                    <SmTooltip
-                      title="If set, this value will override all lower rates in the inventory grid (including derived rates)."
-                      trigger="hover" placement="right">
-                      <SmIcon name="utility-information-alt" class="tooltip-icon" />
-                    </SmTooltip>
-                  </template>
-                </SmInput>
-              </div>
-            </div>
-          </SmFormGroup>
-
-          <!-- Rate Setup -->
-          <SmFormGroup id="rate-setup" legend="RATE SETUP">
-            <SmRadioGroup label="Rate setup method" v-model="rateSetup" name="rateSetup">
-              <SmRadio label="Manually input daily rates" selected-value="manual" v-model="rateSetup" name="rateSetup"
-                :error-disabled="true" />
-              <SmRadio label="Derive daily rates from an existing rate plan" selected-value="derive" v-model="rateSetup"
-                name="rateSetup" :error-disabled="true" />
-            </SmRadioGroup>
-
-            <div v-show="rateSetup === 'derive'" class="derived-rate-fields">
-              <SmSelect id="derivedFrom" v-model="derivedFrom" label="Derived from" name="derivedFrom"
-                :options="derivedFromOptions" placeholder="Non-Refundable" />
-
-              <SmSelect v-model="adjustDailyRatesBy" label="Adjust daily rates by" name="adjustDailyRatesBy"
-                :options="adjustByOptions" placeholder="Percentage" />
-
-              <div class="form-row">
-                <div class="form-col col-span-3">
-                  <SmSelect v-model="percentageAdjustmentType" label="Percentage adjustment"
-                    name="percentageAdjustmentType" :options="percentageTypeOptions" placeholder="Decrease by (%)" />
-                </div>
-                <div class="form-col col-span-1">
-                  <SmInput v-model="percentageAdjustmentValue" label="Value" name="percentageValue" placeholder="10" />
-                </div>
-              </div>
-            </div>
-          </SmFormGroup>
-
-          <!-- Direct Booking Controls -->
-          <SmFormGroup id="booking-controls" legend="DIRECT BOOKING CONTROLS">
-            <h6 class="sm-h6" style="margin-top: 8px; margin-bottom: 3px;">Restrict
-              bookable dates</h6>
-
-            <SmCheckboxGroup name="includedStayDatesGroup" label="Included stay dates" class="form-checkbox-group">
-              <template #action>
-                <SmTooltip title="Restrict the dates your rates are bookable" trigger="hover" placement="right">
-                  <SmIcon name="utility-information-alt" class="tooltip-icon" />
-                </SmTooltip>
+            <!-- Error Summary Card -->
+            <SmHelpCard v-if="hasErrors" type="warning">
+              <template #header>
+                Please check the following fields for errors.
               </template>
-              <SmCheckbox v-model="applicableDates" id="applicableDates" name="applicableDates"
-                label="Enable included stay dates" />
-            </SmCheckboxGroup>
+              <template #body>
+                <ul class="error-list">
+                  <li v-for="field in errorFieldsList" :key="field.name">
+                    <a :href="`#${field.id}`" class="error-link">{{
+                      field.label }}</a>
+                  </li>
+                </ul>
+              </template>
+            </SmHelpCard>
 
-            <!-- Included stay date ranges -->
-            <div v-for="(range, index) in applicableDateRanges" :key="index" v-if="applicableDates"
-              class="date-range-item">
-              <div class="date-range-header">
-                <span class="date-range-label">Date range</span>
-                <div class="date-range-actions">
-                  <button type="button" class="date-range-action-btn clear-btn"
-                    @click="clearDateRange('applicable', index)">
-                    Clear
-                  </button>
-                  <button type="button" class="date-range-action-btn delete-btn"
-                    @click="deleteDateRange('applicable', index)">
-                    Delete
-                  </button>
-                </div>
-              </div>
-              <SmDatePicker v-model="applicableDateRanges[index]" :name="`applicableDateRange${index}`" :is-range="true"
-                start-date-placeholder="DD/MM/YYYY" end-date-placeholder="DD/MM/YYYY" :label-hidden="true"
-                mode="date" />
-            </div>
+            <!-- General Information -->
+            <SmFormGroup id="general-information" legend="GENERAL INFORMATION">
+              <SmInput id="ratePlanName" v-model="ratePlanName" label="Rate plan name" name="ratePlanName"
+                placeholder="Enter rate plan name" :mandatory="true" />
 
-            <button v-if="applicableDates && applicableDateRanges.length < 5" type="button" class="add-date-range-btn"
-              @click="addDateRange('applicable')">
-              <span class="plus-icon">+</span> Add included dates
-            </button>
-            <div v-else-if="applicableDates && applicableDateRanges.length >= 5" class="date-range-limit-message">
-              Maximum of 5 date ranges reached
-            </div>
+              <SmInput type="textarea" label="Rate plan description" name="ratePlanDescription"
+                v-model="ratePlanDescription" placeholder="Enter description" :rows="3" />
+            </SmFormGroup>
 
-            <SmCheckboxGroup name="daysOfWeekGroup" label="Days of the week restriction" class="form-checkbox-group">
-              <SmCheckbox v-model="includedStayDays" id="includedStayDays" name="includedStayDays"
-                label="Enable days of the week restriction" />
-            </SmCheckboxGroup>
-
-            <SmSelect v-if="includedStayDays" v-model="stayDatesIncludedDays" label="Included days"
-              name="stayDatesIncludedDays" :options="daysOfWeekOptions" :multiple="true" placeholder="All days" />
-
-            <SmCheckboxGroup name="excludedStayDatesGroup" label="Excluded stay dates" class="form-checkbox-group">
-              <SmCheckbox v-model="excludedStayDates" id="excludedStayDates" name="excludedStayDates"
-                label="Enable excluded stay dates" />
-            </SmCheckboxGroup>
-
-            <!-- Excluded stay date ranges -->
-            <div v-for="(range, index) in excludedStayDateRanges" :key="index" v-if="excludedStayDates"
-              class="date-range-item">
-              <div class="date-range-header">
-                <span class="date-range-label">Date range</span>
-                <div class="date-range-actions">
-                  <button type="button" class="date-range-action-btn clear-btn"
-                    @click="clearDateRange('excluded', index)">
-                    Clear
-                  </button>
-                  <button type="button" class="date-range-action-btn delete-btn"
-                    @click="deleteDateRange('excluded', index)">
-                    Delete
-                  </button>
-                </div>
-              </div>
-              <SmDatePicker v-model="excludedStayDateRanges[index]" :name="`excludedStayDateRange${index}`"
-                :is-range="true" start-date-placeholder="DD/MM/YYYY" end-date-placeholder="DD/MM/YYYY"
-                :label-hidden="true" mode="date" />
-            </div>
-
-            <button v-if="excludedStayDates && excludedStayDateRanges.length < 5" type="button"
-              class="add-date-range-btn" @click="addDateRange('excluded')">
-              <span class="plus-icon">+</span> Add excluded dates
-            </button>
-            <div v-else-if="excludedStayDates && excludedStayDateRanges.length >= 5" class="date-range-limit-message">
-              Maximum of 5 date ranges reached
-            </div>
-
-            <SmCheckboxGroup name="includedAdvertisedDatesGroup" label="Included advertised dates"
-              class="form-checkbox-group">
-              <SmCheckbox v-model="includedAdvertisedDates" id="includedAdvertisedDates" name="includedAdvertisedDates"
-                label="Enable included advertised dates" />
-            </SmCheckboxGroup>
-
-            <!-- Included advertised date ranges -->
-            <div v-for="(range, index) in includedAdvertisedDateRanges" :key="index" v-if="includedAdvertisedDates"
-              class="date-range-item">
-              <div class="date-range-header">
-                <span class="date-range-label">Date range</span>
-                <div class="date-range-actions">
-                  <button type="button" class="date-range-action-btn clear-btn"
-                    @click="clearDateRange('includedAdvertised', index)">
-                    Clear
-                  </button>
-                  <button type="button" class="date-range-action-btn delete-btn"
-                    @click="deleteDateRange('includedAdvertised', index)">
-                    Delete
-                  </button>
-                </div>
-              </div>
-              <SmDatePicker v-model="includedAdvertisedDateRanges[index]" :name="`includedAdvertisedDateRange${index}`"
-                :is-range="true" start-date-placeholder="DD/MM/YYYY" end-date-placeholder="DD/MM/YYYY"
-                :label-hidden="true" mode="date" />
-            </div>
-
-            <button v-if="includedAdvertisedDates && includedAdvertisedDateRanges.length < 5" type="button"
-              class="add-date-range-btn" @click="addDateRange('includedAdvertised')">
-              <span class="plus-icon">+</span> Add included advertised dates
-            </button>
-            <div v-else-if="includedAdvertisedDates && includedAdvertisedDateRanges.length >= 5"
-              class="date-range-limit-message">
-              Maximum of 5 date ranges reached
-            </div>
-
-            <SmCheckboxGroup name="excludedAdvertisedDatesGroup" label="Excluded advertised dates"
-              class="form-checkbox-group">
-              <SmCheckbox v-model="excludedAdvertisedDates" id="excludedAdvertisedDates" name="excludedAdvertisedDates"
-                label="Enable excluded advertised dates" />
-            </SmCheckboxGroup>
-
-            <!-- Excluded advertised date ranges -->
-            <div v-for="(range, index) in excludedAdvertisedDateRanges" :key="index" v-if="excludedAdvertisedDates"
-              class="date-range-item">
-              <div class="date-range-header">
-                <span class="date-range-label">Date range</span>
-                <div class="date-range-actions">
-                  <button type="button" class="date-range-action-btn clear-btn"
-                    @click="clearDateRange('excludedAdvertised', index)">
-                    Clear
-                  </button>
-                  <button type="button" class="date-range-action-btn delete-btn"
-                    @click="deleteDateRange('excludedAdvertised', index)">
-                    Delete
-                  </button>
-                </div>
-              </div>
-              <SmDatePicker v-model="excludedAdvertisedDateRanges[index]" :name="`excludedAdvertisedDateRange${index}`"
-                :is-range="true" start-date-placeholder="DD/MM/YYYY" end-date-placeholder="DD/MM/YYYY"
-                :label-hidden="true" mode="date" />
-            </div>
-
-            <button v-if="excludedAdvertisedDates && excludedAdvertisedDateRanges.length < 5" type="button"
-              class="add-date-range-btn" @click="addDateRange('excludedAdvertised')">
-              <span class="plus-icon">+</span> Add excluded advertised dates
-            </button>
-            <div v-else-if="excludedAdvertisedDates && excludedAdvertisedDateRanges.length >= 5"
-              class="date-range-limit-message">
-              Maximum of 5 date ranges reached
-            </div>
-
-            <SmCheckboxGroup name="advanceBookingGroup" label="Advance booking restriction" class="form-checkbox-group">
-              <SmCheckbox v-model="maxAdvanceBookingDates" id="maxAdvanceBookingDates" name="maxAdvanceBookingDates"
-                label="Enable advance booking restriction" />
-            </SmCheckboxGroup>
-
-            <div v-if="maxAdvanceBookingDates" class="form-row">
-              <div class="form-col col-span-2">
-                <SmInput v-model="maxAdvanceBookingDays" name="maxAdvanceBookingDays" label="Number of days"
-                  type="number" placeholder="e.g., 30, 60, 90" />
-              </div>
-              <div class="form-col col-span-2">
-                <SmSelect v-model="maxAdvanceBookingTimeframe" name="maxAdvanceBookingTimeframe" label="Timeframe"
-                  :options="maxAdvanceBookingTimeframeOptions" />
-              </div>
-            </div>
-
-            <h6 class="sm-h6" style="margin-top: 8px; margin-bottom: 3px;">
-              Additional options</h6>
-
-            <SmCheckboxGroup name="dynamicDiscountsGroup" label="Dynamic discounts" class="form-checkbox-group">
-              <SmCheckbox v-model="dynamicDiscounts" id="dynamicDiscounts" name="dynamicDiscounts"
-                label="Enable dynamic discounts" />
-            </SmCheckboxGroup>
-
-            <div v-if="dynamicDiscounts" class="form-row">
-              <SmSelect v-model="discountType" name="discountType" label="Discount type"
-                placeholder="Select a discount type" :options="discountTypeOptions" />
-            </div>
-
-            <!-- Dynamic Length of Stay Fields -->
-            <div v-if="dynamicDiscounts && discountType === 'dynamic_los'">
-              <div v-for="(rule, index) in losRules" :key="index" class="form-row">
-                <div class="form-col">
-                  <SmSelect v-model="rule.nights" :name="`losNights_${index}`" label="Nights"
-                    placeholder="Select nights" :options="losNightsOptions" />
-                </div>
-                <div :class="index === losRules.length - 1 && losRules.length > 1 ? 'form-col col-span-1' : 'form-col'">
-                  <SmInput v-model="rule.discountPercent" :name="`losDiscountPercent_${index}`" label="Discount %"
-                    type="number" placeholder="0" />
-                </div>
-                <div v-if="index === losRules.length - 1 && losRules.length > 1" class="form-col col-span-1">
-                  <label class="field-label" style="visibility: hidden;">Action</label>
-                  <SmButton type="secondary" @click="removeLosRule(index)" style="width: 100%;">
-                    Delete
-                  </SmButton>
-                </div>
-              </div>
-              <button v-if="losRules.length < 15" type="button" class="add-date-range-btn" @click="addLosRule"
-                style="margin-top: 16px;">
-                <span class="plus-icon">+</span> Add rule
-              </button>
-              <div v-if="losRules.length >= 15" class="date-range-limit-message">
-                Maximum of 15 rules reached
-              </div>
-            </div>
-
-            <!-- Stay Pay Deal Fields -->
-            <div v-if="dynamicDiscounts && discountType === 'stay_pay'">
+            <!-- Restrictions and Inclusions -->
+            <SmFormGroup id="restrictions-inclusions" legend="RESTRICTIONS AND INCLUSIONS">
               <div class="form-row">
                 <div class="form-col">
-                  <SmInput v-model="stayNights" name="stayNights" label="Stay nights" type="number"
-                    placeholder="e.g., 3" />
+                  <SmInput v-model="defaultMinStay" label="Default minimum stay" name="defaultMinStay" placeholder="" />
                 </div>
                 <div class="form-col">
-                  <SmInput v-model="payNights" name="payNights" label="Pay nights" type="number"
-                    placeholder="e.g., 2" />
+                  <SmInput v-model="defaultMaxStay" label="Default maximum stay" name="defaultMaxStay" placeholder="" />
                 </div>
               </div>
 
-              <SmRadioGroup name="discountFor" label="Discount for">
-                <SmRadio v-model="discountFor" name="discountFor" selected-value="all_nights" label="All nights"
+              <div class="form-row">
+                <div class="form-col">
+                  <SmInput v-model="releasePeriod" label="Release period" name="releasePeriod" placeholder="14" />
+                </div>
+                <div class="form-col">
+                  <SmSelect v-model="inclusions" label="Inclusions" name="inclusions" :options="inclusionsOptions"
+                    placeholder="None" />
+                </div>
+              </div>
+            </SmFormGroup>
+
+            <!-- Pricing Details -->
+            <SmFormGroup id="pricing-details" legend="PRICING DETAILS">
+              <div class="form-row">
+                <div class="form-col">
+                  <SmInput v-model="currency" label="Currency" name="currency" placeholder="Australian Dollar"
+                    disabled />
+                </div>
+                <div class="form-col">
+                  <SmInput v-model="minimumRate" label="Minimum rate" name="minimumRate" placeholder="" disabled>
+                    <template #prefix>
+                      <SmInputPrefixContent>AUD
+                      </SmInputPrefixContent>
+                    </template>
+                    <template v-slot:suffix>
+                      <sm-button @click="enabled = !enabled" aria-controls="min-rate" type="tertiary" size="large"
+                        :aria-label="enabled ? 'Lock field' : 'Unlock field'"
+                        :title="enabled ? 'Lock field' : 'Unlock field'">
+                        <sm-icon :name="enabled ? 'action-lock-open' : 'action-lock'" />
+                      </sm-button>
+                    </template>
+                    <template #action>
+                      <SmTooltip
+                        title="If set, this value will override all lower rates in the inventory grid (including derived rates)."
+                        trigger="hover" placement="right">
+                        <SmIcon name="utility-information-alt" class="tooltip-icon" width="14px" height="14px" />
+                      </SmTooltip>
+                    </template>
+                  </SmInput>
+                </div>
+              </div>
+            </SmFormGroup>
+
+            <!-- Rate Setup -->
+            <SmFormGroup id="rate-setup" legend="RATE SETUP">
+              <SmRadioGroup label="Rate setup method" v-model="rateSetup" name="rateSetup">
+                <SmRadio label="Manually input daily rates" selected-value="manual" v-model="rateSetup" name="rateSetup"
                   :error-disabled="true" />
-                <SmRadio v-model="discountFor" name="discountFor" selected-value="last_night" label="Last night"
-                  :error-disabled="true" />
-                <SmRadio v-model="discountFor" name="discountFor" selected-value="cheapest_night" label="Cheapest night"
-                  :error-disabled="true" />
+                <SmRadio label="Derive daily rates from an existing rate plan" selected-value="derive"
+                  v-model="rateSetup" name="rateSetup" :error-disabled="true" />
               </SmRadioGroup>
-            </div>
 
-            <!-- Package Deal Fields -->
-            <div v-if="dynamicDiscounts && discountType === 'package'">
-              <SmInput v-model="packageIncludedNights" name="packageIncludedNights" label="Number of included nights"
-                type="number" placeholder="0" />
+              <div v-show="rateSetup === 'derive'" class="derived-rate-fields">
+                <SmSelect id="derivedFrom" v-model="derivedFrom" label="Derived from" name="derivedFrom"
+                  :options="derivedFromOptions" placeholder="Non-Refundable" />
 
-              <p class="sm-text--small" style="margin-top: 24px; margin-bottom: 16px; font-weight: 600;">
-                Charges for
-                additional nights</p>
+                <SmSelect v-model="adjustDailyRatesBy" label="Adjust daily rates by" name="adjustDailyRatesBy"
+                  :options="adjustByOptions" placeholder="Percentage" />
 
-              <div class="form-row">
-                <div class="form-col">
-                  <SmInput v-model="packageField1" name="packageField1" label="Rate for included occupants"
-                    type="number" placeholder="0">
-                    <template #prefix>
-                      <span>AUD</span>
-                    </template>
-                  </SmInput>
-                </div>
-                <div class="form-col">
-                  <SmInput v-model="packageField2" name="packageField2" label="Extra adult rate" type="number"
-                    placeholder="0">
-                    <template #prefix>
-                      <span>AUD</span>
-                    </template>
-                  </SmInput>
+                <div class="form-row">
+                  <div class="form-col col-span-3">
+                    <SmSelect v-model="percentageAdjustmentType" label="Percentage adjustment"
+                      name="percentageAdjustmentType" :options="percentageTypeOptions" placeholder="Decrease by (%)" />
+                  </div>
+                  <div class="form-col col-span-1">
+                    <SmInput v-model="percentageAdjustmentValue" label="Value" name="percentageValue"
+                      placeholder="10" />
+                  </div>
                 </div>
               </div>
+            </SmFormGroup>
 
-              <div class="form-row">
-                <div class="form-col">
-                  <SmInput v-model="packageField3" name="packageField3" label="Extra child rate" type="number"
-                    placeholder="0">
-                    <template #prefix>
-                      <span>AUD</span>
-                    </template>
-                  </SmInput>
-                </div>
-                <div class="form-col">
-                  <SmInput v-model="packageField4" name="packageField4" label="Extra infant rate" type="number"
-                    placeholder="0">
-                    <template #prefix>
-                      <span>AUD</span>
-                    </template>
-                  </SmInput>
-                </div>
-              </div>
+            <!-- Direct Booking Controls -->
+            <SmFormGroup id="booking-controls" legend="DIRECT BOOKING CONTROLS">
+              <h2 class="form-heading-2" style="margin-top: 8px; margin-bottom: 3px;">Restrict
+                bookable dates</h2>
 
-              <!-- Seasonal Overrides -->
-              <div v-for="(override, index) in packageSeasonalOverrides" :key="index" style="margin-top: 32px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                  <h6 class="sm-h6" style="margin: 0;">Seasonal
-                    override</h6>
-                  <button type="button" class="date-range-action-btn delete-btn" @click="removeSeasonalOverride(index)">
-                    Delete
-                  </button>
-                </div>
+              <SmCheckboxGroup name="includedStayDatesGroup" label="Included stay dates">
+                <template #action>
+                  <SmTooltip title="Restrict the dates your rates are bookable" trigger="hover" placement="right">
+                    <SmIcon name="utility-information-alt" class="tooltip-icon" width="14px" height="14px" />
+                  </SmTooltip>
+                </template>
+                <SmCheckbox v-model="applicableDates" id="applicableDates" name="applicableDates"
+                  label="Enable included stay dates" />
+              </SmCheckboxGroup>
 
-                <div class="date-range-item">
-                  <div class="date-range-header">
-                    <span class="date-range-label">Date
-                      range</span>
-                    <div class="date-range-actions">
-                      <button type="button" class="date-range-action-btn clear-btn"
-                        @click="clearSeasonalOverrideDateRange(index)">
+              <!-- Included stay date ranges container -->
+              <div v-if="applicableDates" class="date-ranges-container">
+                <div v-for="(_, index) in applicableDateRanges" :key="index" class="date-range-item">
+                  <div class="form-item-header">
+                    <label class="sm-field-label sm-text--small">Date range</label>
+                    <div class="form-item-actions">
+                      <SmButton type="text" size="small" @click="clearDateRange('applicable', index)">
                         Clear
-                      </button>
+                      </SmButton>
+                      <SmButton type="text-warning" size="small" @click="deleteDateRange('applicable', index)">
+                        Delete
+                      </SmButton>
                     </div>
                   </div>
-                  <SmDatePicker v-model="override.dateRange" :name="`seasonalOverrideDateRange${index}`"
+                  <SmDatePicker v-model="applicableDateRanges[index]" :name="`applicableDateRange${index}`"
                     :is-range="true" start-date-placeholder="DD/MM/YYYY" end-date-placeholder="DD/MM/YYYY"
                     :label-hidden="true" mode="date" />
                 </div>
 
-                <div class="form-row" style="margin-top: 16px;">
-                  <div class="form-col">
-                    <SmInput v-model="override.includedNights" :name="`seasonalOverrideIncludedNights${index}`"
-                      label="Number of included nights" type="number" placeholder="0" />
+                <div v-if="applicableDateRanges.length < 5">
+                  <SmButton type="text" size="large" @click="addDateRange('applicable')">
+                    <SmIcon name="controls-add" />
+                    Add included dates
+                  </SmButton>
+                </div>
+                <div v-else class="date-range-limit-message">
+                  Maximum of 5 date ranges reached
+                </div>
+              </div>
+
+              <SmCheckboxGroup name="daysOfWeekGroup" label="Days of the week restriction">
+                <SmCheckbox v-model="includedStayDays" id="includedStayDays" name="includedStayDays"
+                  label="Enable days of the week restriction" />
+              </SmCheckboxGroup>
+
+              <div v-if="includedStayDays" class="conditional-form-section">
+                <SmSelect v-model="stayDatesIncludedDays" label="Included days" name="stayDatesIncludedDays"
+                  :options="daysOfWeekOptions" :multiple="true" placeholder="All days" />
+              </div>
+
+              <SmCheckboxGroup name="excludedStayDatesGroup" label="Excluded stay dates">
+                <SmCheckbox v-model="excludedStayDates" id="excludedStayDates" name="excludedStayDates"
+                  label="Enable excluded stay dates" />
+              </SmCheckboxGroup>
+
+              <!-- Excluded stay date ranges container -->
+              <div v-if="excludedStayDates" class="date-ranges-container">
+                <div v-for="(_, index) in excludedStayDateRanges" :key="index" class="date-range-item">
+                  <div class="form-item-header">
+                    <label class="sm-field-label sm-text--small">Date range</label>
+                    <div class="form-item-actions">
+                      <SmButton type="text" size="small" @click="clearDateRange('excluded', index)">
+                        Clear
+                      </SmButton>
+                      <SmButton type="text-warning" size="small" @click="deleteDateRange('excluded', index)">
+                        Delete
+                      </SmButton>
+                    </div>
                   </div>
+                  <SmDatePicker v-model="excludedStayDateRanges[index]" :name="`excludedStayDateRange${index}`"
+                    :is-range="true" start-date-placeholder="DD/MM/YYYY" end-date-placeholder="DD/MM/YYYY"
+                    :label-hidden="true" mode="date" />
                 </div>
 
-                <p class="sm-text--small" style="margin-top: 24px; margin-bottom: 16px; font-weight: 600;">
-                  Charges for additional nights</p>
+                <div v-if="excludedStayDateRanges.length < 5">
+                  <SmButton type="text" size="large" @click="addDateRange('excluded')">
+                    <SmIcon name="controls-add" />
+                    Add excluded dates
+                  </SmButton>
+                </div>
+                <div v-else class="date-range-limit-message">
+                  Maximum of 5 date ranges reached
+                </div>
+              </div>
 
-                <div class="form-row">
-                  <div class="form-col">
-                    <SmInput v-model="override.field1" :name="`seasonalOverrideField1_${index}`"
-                      label="Rate for included occupants" type="number" placeholder="0">
-                      <template #prefix>
-                        <span>AUD</span>
-                      </template>
-                    </SmInput>
+              <h2 class="form-heading-2" style="margin-top: 8px; margin-bottom: 3px;">
+                Restrict advertised dates</h2>
+
+              <SmCheckboxGroup name="includedAdvertisedDatesGroup" label="Included advertised dates">
+                <template #action>
+                  <SmTooltip title="Restrict the dates your rates are advertised" trigger="hover" placement="right">
+                    <SmIcon name="utility-information-alt" class="tooltip-icon" width="14px" height="14px" />
+                  </SmTooltip>
+                </template>
+                <SmCheckbox v-model="includedAdvertisedDates" id="includedAdvertisedDates"
+                  name="includedAdvertisedDates" label="Enable included advertised dates" />
+              </SmCheckboxGroup>
+
+              <!-- Included advertised date ranges container -->
+              <div v-if="includedAdvertisedDates" class="date-ranges-container">
+                <div v-for="(_, index) in includedAdvertisedDateRanges" :key="index" class="date-range-item">
+                  <div class="form-item-header">
+                    <label class="sm-field-label sm-text--small">Date range</label>
+                    <div class="form-item-actions">
+                      <SmButton type="text" size="small" @click="clearDateRange('includedAdvertised', index)">
+                        Clear
+                      </SmButton>
+                      <SmButton type="text-warning" size="small" @click="deleteDateRange('includedAdvertised', index)">
+                        Delete
+                      </SmButton>
+                    </div>
                   </div>
-                  <div class="form-col">
-                    <SmInput v-model="override.field2" :name="`seasonalOverrideField2_${index}`"
-                      label="Extra adult rate" type="number" placeholder="0">
-                      <template #prefix>
-                        <span>AUD</span>
-                      </template>
-                    </SmInput>
-                  </div>
+                  <SmDatePicker v-model="includedAdvertisedDateRanges[index]"
+                    :name="`includedAdvertisedDateRange${index}`" :is-range="true" start-date-placeholder="DD/MM/YYYY"
+                    end-date-placeholder="DD/MM/YYYY" :label-hidden="true" mode="date" />
                 </div>
 
-                <div class="form-row">
-                  <div class="form-col">
-                    <SmInput v-model="override.field3" :name="`seasonalOverrideField3_${index}`"
-                      label="Extra child rate" type="number" placeholder="0">
-                      <template #prefix>
-                        <span>AUD</span>
-                      </template>
-                    </SmInput>
+                <div v-if="includedAdvertisedDateRanges.length < 5">
+                  <SmButton type="text" size="large" @click="addDateRange('includedAdvertised')">
+                    <SmIcon name="controls-add" />
+                    Add included advertised dates
+                  </SmButton>
+                </div>
+                <div v-else class="date-range-limit-message">
+                  Maximum of 5 date ranges reached
+                </div>
+              </div>
+
+              <SmCheckboxGroup name="excludedAdvertisedDatesGroup" label="Excluded advertised dates">
+                <SmCheckbox v-model="excludedAdvertisedDates" id="excludedAdvertisedDates"
+                  name="excludedAdvertisedDates" label="Enable excluded advertised dates" />
+              </SmCheckboxGroup>
+
+              <!-- Excluded advertised date ranges container -->
+              <div v-if="excludedAdvertisedDates" class="date-ranges-container">
+                <div v-for="(_, index) in excludedAdvertisedDateRanges" :key="index" class="date-range-item">
+                  <div class="form-item-header">
+                    <label class="sm-field-label sm-text--small">Date range</label>
+                    <div class="form-item-actions">
+                      <SmButton type="text" size="small" @click="clearDateRange('excludedAdvertised', index)">
+                        Clear
+                      </SmButton>
+                      <SmButton type="text-warning" size="small" @click="deleteDateRange('excludedAdvertised', index)">
+                        Delete
+                      </SmButton>
+                    </div>
                   </div>
-                  <div class="form-col">
-                    <SmInput v-model="override.field4" :name="`seasonalOverrideField4_${index}`"
-                      label="Extra infant rate" type="number" placeholder="0">
-                      <template #prefix>
-                        <span>AUD</span>
-                      </template>
-                    </SmInput>
+                  <SmDatePicker v-model="excludedAdvertisedDateRanges[index]"
+                    :name="`excludedAdvertisedDateRange${index}`" :is-range="true" start-date-placeholder="DD/MM/YYYY"
+                    end-date-placeholder="DD/MM/YYYY" :label-hidden="true" mode="date" />
+                </div>
+
+                <div v-if="excludedAdvertisedDateRanges.length < 5">
+                  <SmButton type="text" size="large" @click="addDateRange('excludedAdvertised')">
+                    <SmIcon name="controls-add" />
+                    Add excluded advertised dates
+                  </SmButton>
+                </div>
+                <div v-else class="date-range-limit-message">
+                  Maximum of 5 date ranges reached
+                </div>
+              </div>
+
+              <SmCheckboxGroup name="advanceBookingGroup" label="Advance booking restriction">
+                <SmCheckbox v-model="maxAdvanceBookingDates" id="maxAdvanceBookingDates" name="maxAdvanceBookingDates"
+                  label="Enable advance booking restriction" />
+              </SmCheckboxGroup>
+
+              <div v-if="maxAdvanceBookingDates" class="conditional-form-section">
+                <div class="form-row">
+                  <div class="form-col col-span-2">
+                    <SmInput v-model="maxAdvanceBookingDays" name="maxAdvanceBookingDays" label="Number of days"
+                      type="number" placeholder="e.g., 30, 60, 90" />
+                  </div>
+                  <div class="form-col col-span-2">
+                    <SmSelect v-model="maxAdvanceBookingTimeframe" name="maxAdvanceBookingTimeframe" label="Timeframe"
+                      :options="maxAdvanceBookingTimeframeOptions" />
                   </div>
                 </div>
               </div>
 
-              <button type="button" class="add-date-range-btn" @click="addSeasonalOverride" style="margin-top: 24px;">
-                <span class="plus-icon">+</span> Add seasonal override
-              </button>
-            </div>
+              <h2 class="form-heading-2" style="margin-top: 8px; margin-bottom: 3px;">
+                Additional options</h2>
 
-            <SmCheckboxGroup name="restrictToMobileGroup" label="Restrict to mobile devices"
-              class="form-checkbox-group">
-              <template #action>
-                <SmTooltip title="When enabled rates will only be visible for booking on mobile devices" trigger="hover"
-                  placement="right">
-                  <SmIcon name="utility-information-alt" class="tooltip-icon" />
-                </SmTooltip>
-              </template>
-              <SmCheckbox v-model="restrictRateToMobile" id="restrictRateToMobile" name="restrictRateToMobile"
-                label="Enable restrict to mobile devices" />
-            </SmCheckboxGroup>
+              <SmCheckboxGroup name="dynamicDiscountsGroup" label="Dynamic discounts">
+                <SmCheckbox v-model="dynamicDiscounts" id="dynamicDiscounts" name="dynamicDiscounts"
+                  label="Enable dynamic discounts" />
+              </SmCheckboxGroup>
 
-            <SmCheckboxGroup name="highlightOnBookingEngineGroup" label="Highlight on booking engine"
-              class="form-checkbox-group">
-              <template #action>
-                <SmTooltip title="Highlighted rate plans are displayed at the top of the page on your booking engine."
-                  trigger="hover" placement="right">
-                  <SmIcon name="utility-information-alt" class="tooltip-icon" />
-                </SmTooltip>
-              </template>
-              <SmCheckbox v-model="highlightRatePlan" id="highlightRatePlan" name="highlightRatePlan"
-                label="Enable highlight on booking engine" />
-            </SmCheckboxGroup>
+              <div v-if="dynamicDiscounts" class="conditional-form-section">
+                <SmSelect v-model="discountType" name="discountType" label="Discount type"
+                  placeholder="Select a discount type" :options="discountTypeOptions" />
+              </div>
 
-            <!-- Highlight on booking engine expanded fields -->
-            <div v-if="highlightRatePlan" class="highlight-booking-engine-section">
-              <div class="media-upload-section">
-                <div class="media-upload-header">
-                  <label class="media-upload-label">Hero
-                    image</label>
-                  <SmTooltip title="The recommended size is 1500x500 px. Supported formats: GIF, JPG, PNG."
-                    trigger="hover" placement="right">
-                    <SmIcon name="utility-information-alt" class="tooltip-icon" />
-                  </SmTooltip>
+              <!-- Dynamic Length of Stay Fields -->
+              <div v-if="dynamicDiscounts && discountType === 'dynamic_los'" class="los-rules-section">
+                <div v-for="(rule, index) in losRules" :key="index" class="form-row">
+                  <div class="form-col">
+                    <SmSelect v-model="rule.nights" :name="`losNights_${index}`" label="Nights"
+                      placeholder="Select nights" :options="losNightsOptions" />
+                  </div>
+                  <div
+                    :class="index === losRules.length - 1 && losRules.length > 1 ? 'form-col col-span-1' : 'form-col'">
+                    <SmInput v-model="rule.discountPercent" :name="`losDiscountPercent_${index}`" label="Discount %"
+                      type="number" placeholder="0" />
+                  </div>
+                  <div v-if="index === losRules.length - 1 && losRules.length > 1" class="form-col col-span-1 los-delete-col">
+                    <SmButton type="text-warning" size="small" @click="removeLosRule(index)" style="width: 100%;">
+                      Delete
+                    </SmButton>
+                  </div>
                 </div>
-                <div class="sm-media">
-                  <div class="sm-media__drop-zone">
-                    <div v-if="highlightImageUrl" class="sm-media--items">
-                      <div class="sm-media-item" :style="{ backgroundImage: `url(${highlightImageUrl})` }">
-                        <div class="sm-media-item__card">
-                          <div class="sm-media-item__actions">
-                            <SmButton type="button" shape="square" size="medium" @click="removeHighlightImage">
-                              <SmIcon name="action-cross" />
-                            </SmButton>
+                <div v-if="losRules.length < 15" class="los-add-button">
+                  <SmButton type="text" size="large" @click="addLosRule">
+                    <SmIcon name="controls-add" />
+                    Add rule
+                  </SmButton>
+                </div>
+                <div v-if="losRules.length >= 15" class="date-range-limit-message">
+                  Maximum of 15 rules reached
+                </div>
+              </div>
+
+              <!-- Stay Pay Deal Fields -->
+              <div v-if="dynamicDiscounts && discountType === 'stay_pay'">
+                <div class="form-row">
+                  <div class="form-col">
+                    <SmInput v-model="stayNights" name="stayNights" label="Stay nights" type="number"
+                      placeholder="e.g., 3" />
+                  </div>
+                  <div class="form-col">
+                    <SmInput v-model="payNights" name="payNights" label="Pay nights" type="number"
+                      placeholder="e.g., 2" />
+                  </div>
+                </div>
+
+                <SmRadioGroup name="discountFor" label="Discount for">
+                  <SmRadio v-model="discountFor" name="discountFor" selected-value="all_nights" label="All nights"
+                    :error-disabled="true" />
+                  <SmRadio v-model="discountFor" name="discountFor" selected-value="last_night" label="Last night"
+                    :error-disabled="true" />
+                  <SmRadio v-model="discountFor" name="discountFor" selected-value="cheapest_night"
+                    label="Cheapest night" :error-disabled="true" />
+                </SmRadioGroup>
+              </div>
+
+              <!-- Package Deal Fields -->
+              <div v-if="dynamicDiscounts && discountType === 'package'">
+                <SmInput v-model="packageIncludedNights" name="packageIncludedNights" label="Number of included nights"
+                  type="number" placeholder="0" />
+
+                <p class="sm-text--small" style="margin-top: 24px; margin-bottom: 16px; font-weight: 600;">
+                  Charges for
+                  additional nights</p>
+
+                <div class="form-row">
+                  <div class="form-col">
+                    <SmInput v-model="packageField1" name="packageField1" label="Rate for included occupants"
+                      type="number" placeholder="0">
+                      <template #prefix>
+                        <span>AUD</span>
+                      </template>
+                    </SmInput>
+                  </div>
+                  <div class="form-col">
+                    <SmInput v-model="packageField2" name="packageField2" label="Extra adult rate" type="number"
+                      placeholder="0">
+                      <template #prefix>
+                        <span>AUD</span>
+                      </template>
+                    </SmInput>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-col">
+                    <SmInput v-model="packageField3" name="packageField3" label="Extra child rate" type="number"
+                      placeholder="0">
+                      <template #prefix>
+                        <span>AUD</span>
+                      </template>
+                    </SmInput>
+                  </div>
+                  <div class="form-col">
+                    <SmInput v-model="packageField4" name="packageField4" label="Extra infant rate" type="number"
+                      placeholder="0">
+                      <template #prefix>
+                        <span>AUD</span>
+                      </template>
+                    </SmInput>
+                  </div>
+                </div>
+
+                <!-- Seasonal Overrides -->
+                <div v-for="(override, index) in packageSeasonalOverrides" :key="index" style="margin-top: 32px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h6 class="sm-h6" style="margin: 0;">Seasonal
+                      override</h6>
+                    <SmButton type="text-warning" size="large" @click="removeSeasonalOverride(index)">
+                      Delete
+                    </SmButton>
+                  </div>
+
+                  <div class="date-range-item">
+                    <div class="form-item-header">
+                      <label class="sm-field-label sm-text--small">Date range</label>
+                      <div class="form-item-actions">
+                        <SmButton type="text" size="small" @click="clearSeasonalOverrideDateRange(index)">
+                          Clear
+                        </SmButton>
+                      </div>
+                    </div>
+                    <SmDatePicker v-model="override.dateRange" :name="`seasonalOverrideDateRange${index}`"
+                      :is-range="true" start-date-placeholder="DD/MM/YYYY" end-date-placeholder="DD/MM/YYYY"
+                      :label-hidden="true" mode="date" />
+                  </div>
+
+                  <div class="form-row" style="margin-top: 16px;">
+                    <div class="form-col">
+                      <SmInput v-model="override.includedNights" :name="`seasonalOverrideIncludedNights${index}`"
+                        label="Number of included nights" type="number" placeholder="0" />
+                    </div>
+                  </div>
+
+                  <p class="sm-text--small" style="margin-top: 24px; margin-bottom: 16px; font-weight: 600;">
+                    Charges for additional nights</p>
+
+                  <div class="form-row">
+                    <div class="form-col">
+                      <SmInput v-model="override.field1" :name="`seasonalOverrideField1_${index}`"
+                        label="Rate for included occupants" type="number" placeholder="0">
+                        <template #prefix>
+                          <span>AUD</span>
+                        </template>
+                      </SmInput>
+                    </div>
+                    <div class="form-col">
+                      <SmInput v-model="override.field2" :name="`seasonalOverrideField2_${index}`"
+                        label="Extra adult rate" type="number" placeholder="0">
+                        <template #prefix>
+                          <span>AUD</span>
+                        </template>
+                      </SmInput>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-col">
+                      <SmInput v-model="override.field3" :name="`seasonalOverrideField3_${index}`"
+                        label="Extra child rate" type="number" placeholder="0">
+                        <template #prefix>
+                          <span>AUD</span>
+                        </template>
+                      </SmInput>
+                    </div>
+                    <div class="form-col">
+                      <SmInput v-model="override.field4" :name="`seasonalOverrideField4_${index}`"
+                        label="Extra infant rate" type="number" placeholder="0">
+                        <template #prefix>
+                          <span>AUD</span>
+                        </template>
+                      </SmInput>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <SmButton type="text" size="large" @click="addSeasonalOverride">
+                    <SmIcon name="controls-add" />
+                    Add seasonal override
+                  </SmButton>
+                </div>
+              </div>
+
+              <SmCheckboxGroup name="restrictToMobileGroup" label="Restrict to mobile devices">
+                <template #action>
+                  <SmTooltip title="When enabled rates will only be visible for booking on mobile devices"
+                    trigger="hover" placement="right">
+                    <SmIcon name="utility-information-alt" class="tooltip-icon" width="14px" height="14px" />
+                  </SmTooltip>
+                </template>
+                <SmCheckbox v-model="restrictRateToMobile" id="restrictRateToMobile" name="restrictRateToMobile"
+                  label="Enable restrict to mobile devices" />
+              </SmCheckboxGroup>
+
+              <SmCheckboxGroup name="highlightOnBookingEngineGroup" label="Highlight on booking engine">
+                <template #action>
+                  <SmTooltip title="Highlighted rate plans are displayed at the top of the page on your booking engine."
+                    trigger="hover" placement="right">
+                    <SmIcon name="utility-information-alt" class="tooltip-icon" width="14px" height="14px" />
+                  </SmTooltip>
+                </template>
+                <SmCheckbox v-model="highlightRatePlan" id="highlightRatePlan" name="highlightRatePlan"
+                  label="Enable highlight on booking engine" />
+              </SmCheckboxGroup>
+
+              <!-- Highlight on booking engine expanded fields -->
+              <div v-if="highlightRatePlan" class="highlight-booking-engine-section">
+                <div class="media-upload-section">
+                  <div class="media-upload-header">
+                    <label class="media-upload-label">Hero
+                      image</label>
+                    <SmTooltip title="The recommended size is 1500x500 px. Supported formats: GIF, JPG, PNG."
+                      trigger="hover" placement="right">
+                      <SmIcon name="utility-information-alt" class="tooltip-icon" width="14px" height="14px" />
+                    </SmTooltip>
+                  </div>
+                  <div class="sm-media">
+                    <div class="sm-media__drop-zone">
+                      <div v-if="highlightImageUrl" class="sm-media--items">
+                        <div class="sm-media-item" :style="{ backgroundImage: `url(${highlightImageUrl})` }">
+                          <div class="sm-media-item__card">
+                            <div class="sm-media-item__actions">
+                              <SmButton type="button" shape="square" size="medium" @click="removeHighlightImage">
+                                <SmIcon name="action-cross" />
+                              </SmButton>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div v-else class="sm-media__empty-state">
-                      <input ref="highlightImageInput" type="file" accept="image/png,image/jpg,image/jpeg,image/gif"
-                        class="sm-media__input-hidden" @change="handleHighlightImageUpload" />
-                      <button type="button" @click="openMediaLibrary" class="add-media-btn">
-                        <span class="plus-icon">+</span>
-                        Assign from media
-                        library
-                      </button>
+                      <div v-else class="sm-media__empty-state">
+                        <input ref="highlightImageInput" type="file" accept="image/png,image/jpg,image/jpeg,image/gif"
+                          class="sm-media__input-hidden" @change="handleHighlightImageUpload" />
+                        <div>
+                          <SmButton type="text" size="large" @click="openMediaLibrary">
+                            <SmIcon name="controls-add" />
+                            Assign from media library
+                          </SmButton>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <SmInput v-model="highlightTagline" name="highlightTagline" label="Tagline" placeholder="Enter tagline"
-                :mandatory="true" class="form-input">
-                <template #action>
-                  <SmTooltip
-                    title="A short and catchy description of your rate plan. Include whether the rate is discounted or is a limited time offer."
-                    trigger="hover" placement="right">
-                    <SmIcon name="utility-information-alt" class="tooltip-icon" />
-                  </SmTooltip>
-                </template>
-              </SmInput>
+                <SmInput v-model="highlightTagline" name="highlightTagline" label="Tagline" placeholder="Enter tagline"
+                  :mandatory="true" class="form-input">
+                  <template #action>
+                    <SmTooltip
+                      title="A short and catchy description of your rate plan. Include whether the rate is discounted or is a limited time offer."
+                      trigger="hover" placement="right">
+                      <SmIcon name="utility-information-alt" class="tooltip-icon" width="14px" height="14px" />
+                    </SmTooltip>
+                  </template>
+                </SmInput>
 
-              <SmInput v-model="highlightHeadline" name="highlightHeadline" label="Headline"
-                placeholder="Enter headline" :mandatory="true" class="form-input">
-                <template #action>
-                  <SmTooltip title="The main headline text that will be prominently displayed" trigger="hover"
-                    placement="right">
-                    <SmIcon name="utility-information-alt" class="tooltip-icon" />
-                  </SmTooltip>
-                </template>
-              </SmInput>
+                <SmInput v-model="highlightHeadline" name="highlightHeadline" label="Headline"
+                  placeholder="Enter headline" :mandatory="true" class="form-input">
+                  <template #action>
+                    <SmTooltip title="The main headline text that will be prominently displayed" trigger="hover"
+                      placement="right">
+                      <SmIcon name="utility-information-alt" class="tooltip-icon" width="14px" height="14px" />
+                    </SmTooltip>
+                  </template>
+                </SmInput>
 
-              <div class="key-selling-points-section">
-                <div class="selling-points-header">
-                  <label class="selling-points-label">Key selling
-                    points</label>
-                  <SmTooltip title="Add up to 10 key selling points to highlight the benefits of this rate plan"
-                    trigger="hover" placement="right">
-                    <SmIcon name="utility-information-alt" class="tooltip-icon" />
-                  </SmTooltip>
+                <div class="key-selling-points-section">
+                  <div class="selling-points-header">
+                    <label class="selling-points-label">Key selling
+                      points</label>
+                    <SmTooltip title="Add up to 10 key selling points to highlight the benefits of this rate plan"
+                      trigger="hover" placement="right">
+                      <SmIcon name="utility-information-alt" class="tooltip-icon" width="14px" height="14px" />
+                    </SmTooltip>
+                  </div>
+                  <ol class="selling-points-list">
+                    <li v-for="(point, index) in highlightKeySellingPoints" :key="index" class="selling-point-item"
+                      draggable="true" @dragstart="handleSellingPointDragStart(index)"
+                      @dragover="handleSellingPointDragOver" @drop="handleSellingPointDrop($event, index)"
+                      @dragend="handleSellingPointDragEnd">
+                      <div class="selling-point-container">
+                        <span class="drag-handle" aria-hidden="true">
+                          <SmIcon name="action-drag" />
+                        </span>
+                        <span class="selling-point-input-wrapper">
+                          <SmInput v-model="highlightKeySellingPoints[index]" :name="`keySellingPoint${index}`"
+                            placeholder="Add a selling point" :label-hidden="true" class="selling-point-input" />
+                        </span>
+                        <SmButton v-if="highlightKeySellingPoints.length > 1" type="button" shape="round"
+                          aria-label="Delete" @click="removeKeySellingPoint(index)" class="remove-point-btn">
+                          <SmIcon name="action-remove" class="text-app-warning" />
+                        </SmButton>
+                      </div>
+                    </li>
+                  </ol>
+                  <div v-if="!isMaxSellingPoints">
+                    <SmButton type="text" size="large" @click="addKeySellingPoint">
+                      <SmIcon name="controls-add" />
+                      Add
+                    </SmButton>
+                  </div>
+                  <p v-if="isMaxSellingPoints" class="max-selling-points-message sm-text--small">
+                    Maximum of 10 key selling points reached
+                  </p>
                 </div>
-                <ol class="selling-points-list">
-                  <li v-for="(point, index) in highlightKeySellingPoints" :key="index" class="selling-point-item"
-                    draggable="true" @dragstart="handleSellingPointDragStart(index)"
-                    @dragover="handleSellingPointDragOver" @drop="handleSellingPointDrop($event, index)"
-                    @dragend="handleSellingPointDragEnd">
-                    <div class="selling-point-container">
-                      <span class="drag-handle" aria-hidden="true">
-                        <SmIcon name="action-drag" />
-                      </span>
-                      <span class="selling-point-input-wrapper">
-                        <SmInput v-model="highlightKeySellingPoints[index]" :name="`keySellingPoint${index}`"
-                          placeholder="Add a selling point" :label-hidden="true" class="selling-point-input" />
-                      </span>
-                      <SmButton v-if="highlightKeySellingPoints.length > 1" type="button" shape="round"
-                        aria-label="Delete" @click="removeKeySellingPoint(index)" class="remove-point-btn">
-                        <SmIcon name="action-remove" class="text-app-warning" />
-                      </SmButton>
-                    </div>
-                  </li>
-                </ol>
-                <button v-if="!isMaxSellingPoints" type="button" @click="addKeySellingPoint"
-                  class="add-selling-point-btn">
-                  <span class="plus-icon">+</span> Add
-                </button>
-                <p v-if="isMaxSellingPoints" class="max-selling-points-message sm-text--small">
-                  Maximum of 10 key selling points reached
-                </p>
               </div>
-            </div>
-          </SmFormGroup>
+            </SmFormGroup>
+          </div>
         </SmForm>
       </div>
     </div>
+
+    <!-- Prototype Settings Panel -->
+    <PrototypeSettings>
+      <div class="settings-section">
+        <h3 class="settings-section-title">Display Controls</h3>
+        <div class="toggle-item">
+          <label class="toggle-label">
+            <input type="checkbox" v-model="showGridOverlay" id="grid-overlay-toggle" />
+            <span>Show Grid Overlay</span>
+          </label>
+        </div>
+      </div>
+    </PrototypeSettings>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
+import PrototypeSettings from '@/shared/components/PrototypeSettings.vue'
+import GridOverlay from '@/shared/components/GridOverlay.vue'
 
 /* ============================================
    FORM DATA - RATE PLAN
@@ -673,6 +715,9 @@ const packageField4 = ref('')
 const packageSeasonalOverrides = ref([])
 const restrictRateToMobile = ref(false)
 const highlightRatePlan = ref(false)
+
+// Grid overlay state
+const showGridOverlay = ref(false)
 
 // Highlight on booking engine fields
 const highlightTagline = ref('')
@@ -978,6 +1023,54 @@ const deleteDateRange = (type, index) => {
 /* ============================================
    DYNAMIC DISCOUNT FUNCTIONS
    ============================================ */
+// Watch checkbox toggles and reset data when unchecked
+watch(applicableDates, (newValue) => {
+  if (!newValue) {
+    applicableDateRanges.value = []
+  }
+})
+
+watch(excludedStayDates, (newValue) => {
+  if (!newValue) {
+    excludedStayDateRanges.value = []
+  }
+})
+
+watch(includedAdvertisedDates, (newValue) => {
+  if (!newValue) {
+    includedAdvertisedDateRanges.value = []
+  }
+})
+
+watch(excludedAdvertisedDates, (newValue) => {
+  if (!newValue) {
+    excludedAdvertisedDateRanges.value = []
+  }
+})
+
+watch(includedStayDays, (newValue) => {
+  if (!newValue) {
+    stayDatesIncludedDays.value = []
+  }
+})
+
+// Watch dynamic discounts toggle and reset all discount fields
+watch(dynamicDiscounts, (newValue) => {
+  if (!newValue) {
+    discountType.value = ''
+    losRules.value = [{ nights: null, discountPercent: '' }]
+    stayNights.value = ''
+    payNights.value = ''
+    discountFor.value = ''
+    packageIncludedNights.value = ''
+    packageField1.value = ''
+    packageField2.value = ''
+    packageField3.value = ''
+    packageField4.value = ''
+    packageSeasonalOverrides.value = []
+  }
+})
+
 // Watch discount type changes and reset fields
 watch(discountType, (newValue) => {
   if (newValue !== 'stay_pay') {
@@ -994,6 +1087,7 @@ watch(discountType, (newValue) => {
     packageField2.value = ''
     packageField3.value = ''
     packageField4.value = ''
+    packageSeasonalOverrides.value = []
   }
 })
 
@@ -1160,6 +1254,71 @@ onMounted(() => {
 }
 
 // Component-specific styles (general layout utilities are in ../styles.scss)
+
+// Form content wrapper establishes positioning context for grid overlay
+.form-content-wrapper {
+  position: relative;
+}
+
+// Settings panel styles for slotted content
+.settings-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #4b5563;
+  margin: 0 0 16px 0;
+}
+
+.settings-section {
+  margin-bottom: 32px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.toggle-item {
+  padding: 12px 0;
+
+  .toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #1f2937;
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #0066cc;
+    }
+
+    &:hover {
+      span {
+        color: #0066cc;
+      }
+    }
+  }
+}
+
+.derived-rate-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+// Dynamic Length of Stay Rules styling
+.los-delete-col {
+  justify-content: flex-end;
+  padding-bottom: 5px;
+}
+
+.los-add-button {
+  margin-top: 1rem;
+}
 
 .highlight-booking-engine-section {
   margin-top: 1.5rem;

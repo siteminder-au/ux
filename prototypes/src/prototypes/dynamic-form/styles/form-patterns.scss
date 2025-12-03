@@ -1,0 +1,23 @@
+// ============================================================================
+// DYNAMIC FORM CONTENT STYLES
+// Form-specific content and layout styles for the dynamic form prototype
+// ============================================================================
+
+// Generic container for checkbox-revealed conditional content
+// Provides consistent spacing between conditional sections and following elements
+.conditional-form-section {
+  margin-bottom: 20px;
+}
+
+// Date ranges container for dynamically added date range fields
+.date-ranges-container {
+  @extend .conditional-form-section;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  // Remove bottom margin from labels inside form-item-header
+  .form-item-header .sm-field-label {
+    margin-bottom: 0;
+  }
+}

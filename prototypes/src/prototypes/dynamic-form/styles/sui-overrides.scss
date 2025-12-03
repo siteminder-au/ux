@@ -3,8 +3,12 @@
 // Dynamic form specific overrides for SUI components
 // ============================================================================
 
-:deep(.sm-input__footer) {
-  min-height: 0px;
+:deep(.sm-input__footer, .sm-date-picker__footer) {
+  min-height: 0px !important;
+  padding: 0;
+}
+:deep(.sm-date-picker__footer) {
+  min-height: 0px !important;
   padding: 0;
 }
 
@@ -25,4 +29,22 @@
     line-height: 20px;
     margin-bottom: 8px;
   }
+}
+
+// Hide "Press enter to remove" text in SmSelect dropdowns
+:deep(.multiselect__option--selected.multiselect__option--highlight::after),
+:deep(.multiselect__option--group-selected.multiselect__option--highlight::after) {
+  content: '' !important;
+}
+
+// ============================================================================
+// PROPOSED NEW STYLES FOR SUI
+// ============================================================================
+
+// new l2 heading for forms
+.form-heading-2 {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  // margin-bottom: 24px;
 }
