@@ -35,6 +35,13 @@
   flex-direction: column;
 }
 
+// Full width form styling
+.slide-wrapper.full-width {
+  .slide-right {
+    width: 100%;
+  }
+}
+
 .container-header {
   padding: 1rem 1.5rem;
   background: #f8f8f8;
@@ -143,7 +150,6 @@
   .slide-left,
   .slide-right {
     width: 100%;
-    height: 50vh;
-    padding: 1rem;
+    height: auto;
   }
 }

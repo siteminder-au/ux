@@ -1,42 +1,58 @@
 <template>
-  <header class="slide-header">
-    <h1 class="slide-title">{{ slideTitle }}</h1>
-
-    <div class="nav-section">
-      <button
-        class="nav-button"
-        :disabled="isFirstSlide"
-        @click="$emit('navigate', 'prev')"
-      >
-        ← Previous
-      </button>
-
-      <select
-        class="slide-select"
-        :value="currentSlide"
-        @change="$emit('goToSlide', parseInt($event.target.value))"
-      >
-        <option
-          v-for="(title, slideNum) in slideTitles"
-          :key="slideNum"
-          :value="slideNum"
-        >
-          {{ title }}
-        </option>
-      </select>
-
-      <button
-        class="nav-button"
-        :disabled="isLastSlide"
-        @click="$emit('navigate', 'next')"
-      >
-        Next →
-      </button>
+  <div class="header-wrapper">
+    <div class="page-header">
+      <div class="page-header-content">
+        <h1 class="page-title">SM form system</h1>
+        <button @click="showReadme = !showReadme" class="readme-toggle">
+          {{ showReadme ? '▼' : '▶' }} Read me
+        </button>
+      </div>
+      <template v-if="showReadme">
+        <!-- EDITABLE CONTENT BELOW -->
+        <p>
+          This prototype demonstrates the SiteMinder form system. For detailed design rules and guidelines, please refer
+          to the
+          <a href="https://docs.google.com/document/d/1UtBtOyQRpZGBMSzMFRnFUWTPhpZrVzfe07UqCgNmpII/edit?tab=t.0"
+            target="_blank" rel="noopener noreferrer">
+            Design rules and guidelines document
+          </a>.
+        </p>
+        <p>The slides below show the system applied to existing forms. These serve as examples of how the system works.
+          Upon approval it will also serve as a document of the finalised designs for the transition of these forms to
+          the new system.</p>
+        <p>The new dynamic-form component is built to support this system and will be rolled out in stages as more
+          functions are added to it.</p>
+        <p>Press tilda key ~ on your keyboard to see available settings such as showing a grid etc.</p>
+        <!-- EDIT THE TEXT ABOVE AS NEEDED -->
+      </template>
     </div>
-  </header>
+
+    <header class="slide-header">
+      <h1 class="slide-title">{{ slideTitle }}</h1>
+
+      <div class="nav-section">
+        <button class="nav-button" :disabled="isFirstSlide" @click="$emit('navigate', 'prev')">
+          ← Previous
+        </button>
+
+        <select class="slide-select" :value="currentSlide" @change="$emit('goToSlide', parseInt($event.target.value))"
+          disabled>
+          <option v-for="(title, slideNum) in slideTitles" :key="slideNum" :value="slideNum">
+            {{ title }}
+          </option>
+        </select>
+
+        <button class="nav-button" disabled @click="$emit('navigate', 'next')">
+          Next →
+        </button>
+      </div>
+    </header>
+  </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
 defineProps({
   currentSlide: Number,
   totalSlides: Number,
@@ -47,16 +63,101 @@ defineProps({
 })
 
 defineEmits(['navigate', 'goToSlide'])
+
+const showReadme = ref(false)
 </script>
 
 <style scoped lang="scss">
+.page-header {
+  background: #f8f8f8;
+  padding: 12px 24px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: 'WORK IN PROGRESS';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-20deg);
+    font-size: 48px;
+    font-weight: 900;
+    color: rgba(0, 0, 0, 0.05);
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 0;
+  }
+
+  p {
+    margin: 12px 0 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #555;
+    position: relative;
+    z-index: 1;
+
+    &:first-of-type {
+      margin-top: 12px;
+    }
+
+    &:last-of-type {
+      margin-bottom: 10px;
+    }
+
+    a {
+      color: #4A90E2;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.page-header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.page-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.readme-toggle {
+  background: none;
+  border: none;
+  color: #4A90E2;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(74, 144, 226, 0.1);
+  }
+}
+
 .slide-header {
   background: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem;
+  padding: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-top: 0;
 }
 
 .slide-title {

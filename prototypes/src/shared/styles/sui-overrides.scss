@@ -1,0 +1,11 @@
+// ============================================================================
+// GLOBAL SUI COMPONENT OVERRIDES
+// Shared overrides for SUI components across all prototypes
+// ============================================================================
+
+// Tooltip text wrapping
+.v-popper--theme-tooltip .v-popper__inner {
+  max-width: 70ch;
+  white-space: normal;
+  word-wrap: break-word;
+}

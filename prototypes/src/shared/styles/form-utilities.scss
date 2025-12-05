@@ -6,7 +6,7 @@
 .form-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  gap: 16px;
 }
 
 .form-col {
@@ -28,23 +28,23 @@
 }
 
 .form-field {
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .field-label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 14px;
 }
 
 .sm-textarea {
   width: 100%;
-  padding: 0.5rem 0.75rem;
+  padding: 8px 12px;
   border: 1px solid #d1d5db;
   border-radius: 4px;
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: 14px;
   resize: vertical;
 
   &:focus {
@@ -57,8 +57,8 @@
 .radio-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .tooltip-icon {
@@ -72,8 +72,8 @@
 .form-card-item {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .form-item-header {
@@ -84,7 +84,7 @@
 
 .form-item-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 // ============================================================================
@@ -98,7 +98,7 @@
 }
 
 .sortable-item {
-  margin-bottom: 0.75rem;
+  margin-bottom: 12px;
   cursor: move;
 
   &:hover {
@@ -126,19 +126,19 @@
 // ============================================================================
 
 .media-upload-section {
-  margin-bottom: 1.5rem;
+  margin-bottom: 24px;
 }
 
 .media-upload-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .media-upload-label {
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 14px;
 }
 
 .sm-media {
@@ -172,17 +172,17 @@
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0.5rem;
+  padding: 8px;
 }
 
 .sm-media-item__actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .sm-media__empty-state {
   text-align: center;
-  padding: 2rem;
+  padding: 32px;
 }
 
 .sm-media__input-hidden {
@@ -194,8 +194,8 @@
 // ============================================================================
 
 .form-helper-message {
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
+  margin-top: 8px;
+  font-size: 14px;
   color: #6b7280;
 }
 
@@ -208,9 +208,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 1.5rem 1.5rem 1.5rem;
-  // margin-bottom: 1.5rem;
-  gap: 1rem;
+  padding: 24px 24px 24px 24px;
+  // margin-bottom: 24px;
+  gap: 16px;
   border-bottom: 1px solid #e0e0e0;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
@@ -222,7 +222,7 @@
 .drawer-page-title {
   font-size: 20px;
   font-weight: 600;
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 4px 0;
   line-height: 1.4;
 }
 
@@ -239,12 +239,12 @@
 
 .sm-drawer__action-buttons {
   display: flex;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
 .sm-drawer__header-section--actions {
   display: flex;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
 // ============================================================================

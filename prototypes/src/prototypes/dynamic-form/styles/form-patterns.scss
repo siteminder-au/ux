@@ -7,6 +7,17 @@
 // Provides consistent spacing between conditional sections and following elements
 .conditional-form-section {
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+// Container for discount type subsections that appear within conditional-form-section
+// Matches the flex gap spacing of SmFormGroup for consistent field spacing
+.discount-type-section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 // Date ranges container for dynamically added date range fields
@@ -14,10 +25,62 @@
   @extend .conditional-form-section;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 12px;
 
   // Remove bottom margin from labels inside form-item-header
   .form-item-header .sm-field-label {
     margin-bottom: 0;
   }
+}
+
+// Seasonal overrides container for card-based seasonal override sections
+.seasonal-overrides-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+// Content wrapper inside seasonal override cards to use gap instead of margins
+.seasonal-override-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+// Header section inside seasonal override cards
+.seasonal-override-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+
+  // Remove top margin on heading to ensure proper vertical alignment
+  .form-heading-3 {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+  }
+}
+
+// Seasonal override card styling
+:deep(.seasonal-override-card.sm-card) {
+  border-radius: 8px;
+  background-color: #f6f6f6;
+  border: 0;
+  cursor: default;
+
+  // Remove hover effects
+  &:hover {
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  &::before {
+    display: none; // Remove top border on hover
+  }
+}
+
+// Override card content padding for seasonal override cards
+:deep(.seasonal-override-card .sm-card-content) {
+  padding: 16px !important;
 }
