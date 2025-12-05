@@ -17,19 +17,23 @@
   padding: 0px !important;
 }
 
+// Checkbox label overrides removed - converted single checkbox groups to standalone checkboxes
+
 :deep(.sm-form-group) {
   display: flex;
   flex-direction: column;
   margin-bottom: 36px;
   gap: 5px;
 
-  legend.sm-p {
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
-    margin-bottom: 8px;
-  }
+  // DEPRECATED - Not using legends anymore, using h2 instead
+  // legend.sm-p {
+  //   font-weight: 600;
+  //   font-size: 14px;
+  //   line-height: 20px;
+  //   margin-bottom: 8px;
+  // }
 }
+
 
 // Hide "Press enter to remove" text in SmSelect dropdowns
 :deep(.multiselect__option--selected.multiselect__option--highlight::after),
@@ -38,13 +42,64 @@
 }
 
 // ============================================================================
-// PROPOSED NEW STYLES FOR SUI
+// HEADING RESET (Scoped to SmForm)
 // ============================================================================
-
-// new l2 heading for forms
-.form-heading-2 {
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  // margin-bottom: 24px;
+// Reset browser default heading styles to remove em units and provide clean slate
+:deep(.sm-form) {
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+  }
 }
+
+// ============================================================================
+// FORM HEADING SYSTEM (Proposed for SUI)
+// ============================================================================
+// 4-level semantic heading system for forms with visual flexibility
+// Page title uses stock SUI h3, these classes are scoped within .sm-form
+// Higher specificity to override the heading reset
+
+// Level 1 - Form Group (h2)
+:deep(.sm-form) .form-heading-1 {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 8px;
+}
+
+// Level 2 - Major Subsections (h3)
+:deep(.sm-form) .form-heading-2 {
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+// Level 3 - Minor Subsections (h4)
+:deep(.sm-form) .form-heading-3 {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: 0.3px;
+  margin-top: 16px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+// Level 4 - Component Titles (h5)
+:deep(.sm-form) .form-heading-4 {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: 0;
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+
