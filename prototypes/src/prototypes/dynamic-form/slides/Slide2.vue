@@ -1333,6 +1333,12 @@ onBeforeUnmount(() => {
   padding-top: 0 !important;
 }
 
+// Remove margin-bottom from standalone checkbox labels (not in groups)
+// Preserve SUI internal spacing for checkbox groups
+:deep(.sm-checkbox:not(.sm-checkbox-group .sm-checkbox) .sm-checkbox__label) {
+  margin-bottom: 0 !important;
+}
+
 /* PHASE 2: APPLY HYBRID GAP + MARGIN SPACING */
 
 // Level 0: Main form wrapper - gap between major sections

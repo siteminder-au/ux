@@ -51,6 +51,8 @@
       - margin-top: 0 !important
       - margin-bottom: 0 !important
       - First/last child internal margins also removed
+      - Single checkbox labels (.sm-checkbox__label): margin-bottom: 0 !important
+        (only for standalone checkboxes, NOT in checkbox groups)
 
    4. Field labels (.sm-field-label):
       - padding-top: 0 !important (creates hard top edge for consistent gap spacing)
@@ -83,5 +85,5 @@ $margin-level-3-heading: 8px;
 $gap-level-3-body: 8px;
 
 // Level 4: Minor sections (heading to body, and between body items)
-$margin-level-4-heading: 8px;
+$margin-level-4-heading: 10px;
 $gap-level-4-body: 8px;
