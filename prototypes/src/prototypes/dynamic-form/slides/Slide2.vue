@@ -1345,33 +1345,33 @@ onBeforeUnmount(() => {
 .form-content-wrapper {
   display: flex !important;
   flex-direction: column !important;
-  gap: $gap-level-0-body !important;
+  gap: $gap-between-form-groups !important;
 }
 
 // Level 1: SmFormGroup - gap between items
 :deep(.sm-form-group) {
   display: flex !important;
   flex-direction: column !important;
-  gap: $gap-level-1-body !important;
+  gap: $gap-between-form-rows !important;
 }
 
 // Level 1 headings - margin-bottom for space to content, margin-top when not first child
 :deep(.form-heading-1) {
   margin-top: 0 !important;
-  margin-bottom: $margin-level-1-heading !important;
+  margin-bottom: $margin-above-and-below-form-headings !important;
 
   &:not(:first-child) {
-    margin-top: $margin-level-1-heading !important;
+    margin-top: $margin-above-and-below-form-headings !important;
   }
 }
 
 // Level 2 headings - margin-bottom for space to content, margin-top when not first child
 :deep(.form-heading-2) {
   margin-top: 0 !important;
-  margin-bottom: $margin-level-2-heading !important;
+  margin-bottom: $margin-above-and-below-form-headings !important;
 
   &:not(:first-child) {
-    margin-top: $margin-level-2-heading !important;
+    margin-top: $margin-above-and-below-form-headings !important;
   }
 }
 
@@ -1385,10 +1385,10 @@ onBeforeUnmount(() => {
 :deep(.form-heading-3),
 .form-heading-3 {
   margin-top: 0 !important;
-  margin-bottom: $margin-level-3-heading !important;
+  margin-bottom: $margin-above-and-below-form-headings !important;
 
   &:not(:first-child) {
-    margin-top: $margin-level-3-heading !important;
+    margin-top: $margin-above-and-below-form-headings !important;
   }
 }
 
@@ -1402,10 +1402,10 @@ onBeforeUnmount(() => {
 :deep(.form-heading-4),
 .form-heading-4 {
   margin-top: 0 !important;
-  margin-bottom: $margin-level-4-heading !important;
+  margin-bottom: $margin-above-and-below-form-headings !important;
 
   &:not(:first-child) {
-    margin-top: $margin-level-4-heading !important;
+    margin-top: $margin-above-and-below-form-headings !important;
   }
 }
 
@@ -1425,14 +1425,14 @@ onBeforeUnmount(() => {
 .seasonal-overrides-container {
   display: flex;
   flex-direction: column;
-  gap: $gap-level-1-body !important;
+  gap: $gap-between-form-rows !important;
 }
 
 // Add breathing room after conditional sections
 .conditional-form-section:not(:last-child),
 .date-ranges-container:not(:last-child),
 .seasonal-overrides-container:not(:last-child) {
-  margin-bottom: $margin-level-2-heading !important;
+  margin-bottom: $margin-above-and-below-form-headings !important;
 }
 
 // Nested item containers
@@ -1440,14 +1440,14 @@ onBeforeUnmount(() => {
 .seasonal-override-content {
   display: flex;
   flex-direction: column;
-  gap: $gap-level-2-body !important;
+  gap: $gap-between-form-rows !important;
 }
 
 // Selling points list
 .selling-points-list {
   display: flex;
   flex-direction: column;
-  gap: $gap-level-3-body !important;
+  gap: $gap-between-form-rows !important;
 }
 
 /* PHASE 3: PRESERVE EXISTING NON-SPACING BEHAVIOR */

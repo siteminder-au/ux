@@ -21,11 +21,10 @@
    3. Headings get margin-top (when :not(:first-child)) for space from previous content
    4. Conditional sections get extra margin-bottom for breathing room
 
-   SPACING EXAMPLE:
-   - Between form groups: $gap-level-0-body (40px)
-   - Between items in a form group: $gap-level-1-body (16px)
-   - Heading to its content: $margin-level-1-heading (8px) via margin-bottom
-   - After conditional content: $margin-level-2-heading (8px) extra margin-bottom
+   SIMPLIFIED SPACING SYSTEM (3 VARIABLES):
+   - $gap-between-form-groups: 40px (between major form sections)
+   - $margin-above-and-below-form-headings: 8px (all heading margins)
+   - $gap-between-form-rows: 16px (all gaps within containers)
 
    IMPORTANT NOTES:
    - Slide1.vue is UNTOUCHED - uses original SUI spacing
@@ -69,21 +68,13 @@
 
    ============================================ */
 
-// Level 0: Main form wrapper (between major sections)
-$gap-level-0-body: 40px;
+// Simplified spacing system - 3 variables control all vertical spacing
 
-// Level 1: SmFormGroup (heading to body, and between body items)
-$margin-level-1-heading: 8px;  // Margin on heading (bottom always, top when not first-child)
-$gap-level-1-body: 16px;        // Gap between items in body
+// Between major form sections (SmFormGroup containers)
+$gap-between-form-groups: 40px;
 
-// Level 2: Subsections (heading to body, and between body items)
-$margin-level-2-heading: 8px;
-$gap-level-2-body: 8px;
+// Above and below all form headings (margin-top when not first-child, margin-bottom always)
+$margin-above-and-below-form-headings: 8px;
 
-// Level 3: Sub-subsections (heading to body, and between body items)
-$margin-level-3-heading: 8px;
-$gap-level-3-body: 8px;
-
-// Level 4: Minor sections (heading to body, and between body items)
-$margin-level-4-heading: 10px;
-$gap-level-4-body: 8px;
+// Between form rows and items within containers
+$gap-between-form-rows: 16px;
