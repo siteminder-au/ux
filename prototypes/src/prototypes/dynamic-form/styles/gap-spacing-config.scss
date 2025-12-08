@@ -1,0 +1,106 @@
+/* ============================================
+   HYBRID GAP + MARGIN SPACING CONFIGURATION
+   Used exclusively by Slide2.vue for spacing experiments
+
+   OVERVIEW:
+   This file configures a hybrid spacing system that combines:
+   - Flexbox GAP for container spacing (between sibling elements)
+   - MARGIN for heading spacing (margin-bottom to content, margin-top when not first-child)
+
+   WHY THIS APPROACH:
+   After experimenting with a pure gap-based system using wrapper divs,
+   we reverted to this simpler hybrid approach because:
+   - No wrapper divs needed (~60 fewer divs in the template!)
+   - More semantic HTML structure
+   - Easier to maintain and reason about
+   - Same visual result with less complexity
+
+   HOW IT WORKS:
+   1. Containers (SmFormGroup, conditional sections, etc.) use flexbox with gap
+   2. Headings get margin-bottom for space to their content
+   3. Headings get margin-top (when :not(:first-child)) for space from previous content
+   4. Conditional sections get extra margin-bottom for breathing room
+
+   SPACING EXAMPLE:
+   - Between form groups: $gap-level-0 (32px)
+   - Between items in a form group: $gap-level-1-body (8px)
+   - Heading to its content: $gap-level-1-heading (16px) via margin-bottom
+   - After conditional content: $gap-level-2-heading (12px) extra margin-bottom
+
+   IMPORTANT NOTES:
+   - Slide1.vue is UNTOUCHED - uses original SUI spacing
+   - Slide2.vue is the experimental playground for this approach
+   - All user agent heading styles are reset (font-size, font-weight, line-height, margin)
+   - Typography hierarchy comes purely from .form-heading-* classes
+
+   Easy configuration for all spacing levels.
+   Adjust these values to experiment with different spacing hierarchies.
+   ============================================ */
+
+// Level 0: Main form wrapper (between major sections)
+$gap-level-0-body: 40px;
+
+// Level 1: SmFormGroup (heading to body, and between body items)
+$margin-level-1-heading: 8px;  // Margin on heading (bottom always, top when not first-child)
+$gap-level-1-body: 16px;        // Gap between items in body
+
+// Level 2: Subsections (heading to body, and between body items)
+$margin-level-2-heading: 8px;
+$gap-level-2-body: 8px;
+
+// Level 3: Sub-subsections (heading to body, and between body items)
+$margin-level-3-heading: 8px;
+$gap-level-3-body: 8px;
+
+// Level 4: Minor sections (heading to body, and between body items)
+$margin-level-4-heading: 8px;
+$gap-level-4-body: 8px;
+
+/* ============================================
+   QUICK PRESETS
+   Uncomment one of these to try different spacing strategies
+   ============================================ */
+
+// TIGHT SPACING
+// $gap-level-0: 24px;
+// $gap-level-1-heading: 12px;
+// $gap-level-1-body: 6px;
+// $gap-level-2-heading: 10px;
+// $gap-level-2-body: 6px;
+// $gap-level-3-heading: 8px;
+// $gap-level-3-body: 6px;
+// $gap-level-4-heading: 6px;
+// $gap-level-4-body: 6px;
+
+// LOOSE SPACING
+// $gap-level-0: 48px;
+// $gap-level-1-heading: 24px;
+// $gap-level-1-body: 12px;
+// $gap-level-2-heading: 16px;
+// $gap-level-2-body: 12px;
+// $gap-level-3-heading: 12px;
+// $gap-level-3-body: 12px;
+// $gap-level-4-heading: 12px;
+// $gap-level-4-body: 12px;
+
+// UNIFORM SPACING (same gap everywhere)
+// $gap-level-0: 16px;
+// $gap-level-1-heading: 16px;
+// $gap-level-1-body: 16px;
+// $gap-level-2-heading: 16px;
+// $gap-level-2-body: 16px;
+// $gap-level-3-heading: 16px;
+// $gap-level-3-body: 16px;
+// $gap-level-4-heading: 16px;
+// $gap-level-4-body: 16px;
+
+// Test off (same gap everywhere) - Currently DISABLED to see actual spacing
+// $gap-level-0: 0px;
+// $gap-level-1-heading: 0px;
+// $gap-level-1-body: 0px;
+// $gap-level-2-heading: 0px;
+// $gap-level-2-body: 0px;
+// $gap-level-3-heading: 0px;
+// $gap-level-3-body: 0px;
+// $gap-level-4-heading: 0px;
+// $gap-level-4-body: 0px;
