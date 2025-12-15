@@ -1,172 +1,159 @@
 <template>
-  <div class="slide-wrapper">
-    <div class="slide-left">
-      <div class="container-header">Current state</div>
+  <div class="slide-wrapper" :class="{ 'full-width': fullWidthForm }">
+
+    <!-- LEFT: Reference Images -->
+    <div v-if="!fullWidthForm" class="slide-left">
+      <div class="container-header">Before / Production</div>
       <div class="container-content">
-        <img src="https://via.placeholder.com/600x400/E74C3C/ffffff?text=Preferences" alt="Preferences" />
-        <img src="https://via.placeholder.com/600x300/F39C12/ffffff?text=Customize+Settings" alt="Settings" />
+        <img :src="channelRateRef" alt="Channel rate reference" style="width: 100%; display: block;" />
       </div>
     </div>
 
+    <!-- RIGHT: Proposed Implementation -->
     <div class="slide-right">
       <div class="container-header">Proposed</div>
-      <div class="container-content">
-        <div class="form-container">
-        <h2>Preferences</h2>
-        <p>Customize your experience.</p>
 
-        <div class="form-group">
-          <label>Notification Preferences</label>
-          <div class="checkbox-group">
-            <label>
-              <input v-model="formData.notifications.email" type="checkbox" />
-              Email notifications
-            </label>
-            <label>
-              <input v-model="formData.notifications.push" type="checkbox" />
-              Push notifications
-            </label>
-            <label>
-              <input v-model="formData.notifications.sms" type="checkbox" />
-              SMS notifications
-            </label>
+      <!-- Drawer Header -->
+      <div class="sm-drawer__header">
+        <div class="sm-drawer__header-section sm-drawer__header-section--title">
+          <h2>Channel rate configuration</h2>
+          <p class="drawer-page-subtitle">Bulk assign test / Apartment</p>
+        </div>
+        <div class="sm-drawer__action-buttons">
+          <div class="sm-drawer__header-section sm-drawer__header-section--actions">
+            <SmButton type="tertiary" size="large" @click="handleCancel">
+              Cancel
+            </SmButton>
+            <SmButton type="primary" size="large" native-type="submit" form="channel-rate-form">
+              Save
+            </SmButton>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label>Frequency</label>
-          <select v-model="formData.frequency" class="form-input">
-            <option value="realtime">Real-time</option>
-            <option value="daily">Daily digest</option>
-            <option value="weekly">Weekly summary</option>
-            <option value="monthly">Monthly report</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Language</label>
-          <select v-model="formData.language" class="form-input">
-            <option value="en">English</option>
-            <option value="es">Spanish</option>
-            <option value="fr">French</option>
-            <option value="de">German</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Theme</label>
-          <div class="radio-group">
-            <label>
-              <input v-model="formData.theme" type="radio" value="light" />
-              Light
-            </label>
-            <label>
-              <input v-model="formData.theme" type="radio" value="dark" />
-              Dark
-            </label>
-            <label>
-              <input v-model="formData.theme" type="radio" value="auto" />
-              Auto
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>
-            <input v-model="formData.newsletter" type="checkbox" />
-            Subscribe to newsletter for updates and special offers
-          </label>
-        </div>
-
-        <SmButton type="primary" @click="handleSubmit">
-          Save Preferences
-        </SmButton>
-
-        <div v-if="saveStatus" class="save-status">
-          Preferences saved! Active notifications: {{ activeNotificationCount }}
-        </div>
         </div>
       </div>
+
+      <div class="container-content">
+        <SmForm id="channel-rate-form" @submit="handleFormSubmit" @invalid-submit="handleInvalidSubmit">
+          <div class="form-content-wrapper" :class="{ 'show-backgrounds': showContainerBackgrounds }">
+            <GridOverlay :show="showGridOverlay" />
+
+            <!-- Error Summary -->
+            <SmHelpCard v-if="hasErrors" type="warning">
+              <template #header>
+                Please check the following fields for errors.
+              </template>
+              <template #body>
+                <ul class="error-list">
+                  <li v-for="field in errorFieldsList" :key="field.name">
+                    <a :href="`#${field.id}`" class="error-link">{{ field.label }}</a>
+                  </li>
+                </ul>
+              </template>
+            </SmHelpCard>
+
+            <!-- 1. PLEASE NOTE -->
+            <SmFormGroup id="please-note">
+              <h2 class="form-heading-1">Please Note</h2>
+              <p>
+                This channel does not support self-mapping. After submission we will process your request and notify you
+                by email when it is finalised.
+              </p>
+            </SmFormGroup>
+
+            <!-- 2. CHANNEL SETTINGS -->
+            <SmFormGroup id="channel-settings">
+              <h2 class="form-heading-1">Channel Settings</h2>
+
+              <SmInput id="roomRateMapping" v-model="roomRateMapping" name="roomRateMapping"
+                label="Bing Hotel Ads room rate to map" type="text" placeholder="Room rate test" rules="required" />
+            </SmFormGroup>
+
+            <!-- 3. RATE SETUP -->
+            <SmFormGroup id="rate-setup">
+              <h2 class="form-heading-1">Rate Setup</h2>
+
+              <SmRadioGroup id="rateSetupType" name="rateSetupType" label="Rate setup method"
+                button-alignment="vertical" rules="required" :error-disabled="true">
+                <SmRadio name="rateSetupType" selected-value="manual" label="Manual" v-model="rateSetupType" />
+                <SmRadio name="rateSetupType" selected-value="derived" v-model="rateSetupType" disabled>
+                  <span style="display: inline-flex; align-items: center; gap: 4px;">
+                    Derived
+                    <SmTooltip
+                      title="Rate setup limited to manual channel rate pricing due to Channel rate pricing mode is being enabled. To amend setup please contact support."
+                      trigger="hover" placement="right">
+                      <SmIcon name="utility-information-alt"
+                        style="font-size: 16px; cursor: help; opacity: 1; color: var(--color-info, #0066CC);" />
+                    </SmTooltip>
+                  </span>
+                </SmRadio>
+              </SmRadioGroup>
+            </SmFormGroup>
+
+          </div>
+        </SmForm>
+      </div>
     </div>
+
+    <PrototypeSettings>
+      <DisplaySettings />
+    </PrototypeSettings>
+
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
+import PrototypeSettings from '@/shared/components/PrototypeSettings.vue'
+import GridOverlay from '@/shared/components/GridOverlay.vue'
+import DisplaySettings from '../components/DisplaySettings.vue'
+import { useDisplaySettings } from '../composables/useDisplaySettings.js'
 
-const formData = ref({
-  notifications: {
-    email: true,
-    push: false,
-    sms: false
-  },
-  frequency: 'daily',
-  language: 'en',
-  theme: 'auto',
-  newsletter: true
+// Import reference image
+import channelRateRef from '/images/dynamic-form/channel-rate.png'
+
+const { showGridOverlay, showContainerBackgrounds, fullWidthForm } = useDisplaySettings()
+
+// Form data
+const roomRateMapping = ref('')
+const rateSetupType = ref('manual')
+
+// Error handling
+const formErrors = ref({})
+
+const errorFieldsList = computed(() => {
+  const fieldLabels = {
+    roomRateMapping: 'Room rate mapping',
+    rateSetupType: 'Rate setup method'
+  }
+  const fieldIds = {
+    roomRateMapping: 'roomRateMapping',
+    rateSetupType: 'rateSetupType'
+  }
+  return Object.keys(formErrors.value).map(fieldName => ({
+    name: fieldName,
+    id: fieldIds[fieldName] || fieldName,
+    label: fieldLabels[fieldName] || fieldName,
+    error: formErrors.value[fieldName]
+  }))
 })
 
-const saveStatus = ref(false)
+const hasErrors = computed(() => Object.keys(formErrors.value).length > 0)
 
-const activeNotificationCount = computed(() => {
-  return Object.values(formData.value.notifications).filter(Boolean).length
-})
+// Form handlers
+const handleFormSubmit = (values) => {
+  console.log('Form submitted:', values)
+  formErrors.value = {}
+}
 
-const handleSubmit = () => {
-  saveStatus.value = true
-  console.log('Slide 4 form submitted:', formData.value)
+const handleInvalidSubmit = (errors) => {
+  console.log('Form validation failed:', errors)
+  formErrors.value = errors?.errors || {}
+}
 
-  setTimeout(() => {
-    saveStatus.value = false
-  }, 3000)
+const handleCancel = () => {
+  console.log('Cancel clicked')
 }
 </script>
 
 <style scoped lang="scss">
 @import '../styles/index.scss';
-
-.form-input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-
-  &:focus {
-    outline: none;
-    border-color: #E74C3C;
-  }
-}
-
-.form-group {
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #555;
-  }
-}
-
-.checkbox-group,
-.radio-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-
-  label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: normal;
-  }
-}
-
-.save-status {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: #d4edda;
-  border: 1px solid #c3e6cb;
-  border-radius: 4px;
-  color: #155724;
-}
 </style>

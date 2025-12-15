@@ -1,0 +1,323 @@
+/* ============================================
+   HYBRID GAP + MARGIN SPACING SYSTEM
+   Experimental spacing approach for dynamic forms
+
+   OVERVIEW:
+   This file contains a hybrid spacing system that combines:
+   - Flexbox GAP for container spacing (between sibling elements)
+   - MARGIN for heading spacing (margin-bottom to content, margin-top when not first-child)
+
+   WHY THIS APPROACH:
+   After experimenting with a pure gap-based system using wrapper divs,
+   we reverted to this simpler hybrid approach because:
+   - No wrapper divs needed (~60 fewer divs in the template!)
+   - More semantic HTML structure
+   - Easier to maintain and reason about
+   - Same visual result with less complexity
+
+   HOW IT WORKS:
+   1. Containers (SmFormGroup, conditional sections, etc.) use flexbox with gap
+   2. Headings get margin-bottom for space to their content
+   3. Headings get margin-top (when :not(:first-child)) for space from previous content
+   4. Conditional sections get extra margin-bottom for breathing room
+
+   TOGGLE ON/OFF:
+   To toggle this spacing system globally, comment/uncomment the
+   import in ../styles/index.scss
+
+   ============================================ */
+
+/* SPACING VARIABLES */
+
+// Between major form sections (SmFormGroup containers)
+$gap-between-form-groups: 40px;
+
+// Above and below all form headings (margin-top when not first-child, margin-bottom always)
+$margin-above-and-below-form-headings: 8px;
+
+// Between form rows and items within containers
+$gap-between-form-rows: 16px;
+
+/* PHASE 1: GLOBAL RESETS - Remove existing vertical margins/padding */
+
+// Reset all form containers and their children
+:deep(.sm-form-group),
+:deep(.sm-form-group) > *,
+.derived-rate-fields,
+.derived-rate-fields > *,
+.conditional-form-section,
+.conditional-form-section > *,
+.date-ranges-container,
+.date-ranges-container > *,
+.date-range-item,
+.discount-type-section,
+.discount-type-section > *,
+.seasonal-overrides-container,
+.seasonal-override-content,
+.seasonal-override-content > *,
+.bedrooms-wrapper,
+.bedroom-content,
+.bedroom-content > *,
+.los-rules-section,
+.los-rules-section > *,
+.inclusions-section,
+.inclusions-section > *,
+.inclusion-item {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+// Reset ALL heading elements (h1-h6) to remove user agent styles
+// Note: Font properties use inherit without !important so .form-heading-* classes can override
+:deep(h1),
+:deep(h2),
+:deep(h3),
+:deep(h4),
+:deep(h5),
+:deep(h6) {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+// EXCEPTION: Restore semantic styling for drawer header headings
+// Drawer headers should look like proper headings, not inherit parent styles
+.sm-drawer__header :deep(h1),
+.sm-drawer__header :deep(h2),
+.sm-drawer__header :deep(h3) {
+  font-size: revert;
+  font-weight: revert;
+  line-height: revert;
+}
+
+// Reset form utilities
+.form-row,
+.form-col,
+.selling-points-list,
+.selling-point-item,
+.los-add-button,
+.form-item-header {
+  margin: 0 !important;
+}
+
+// Reset LOS delete column padding for gap spacing
+.los-delete-col {
+  padding-bottom: 0 !important;
+}
+
+// Remove margins from form input components themselves
+:deep(.sm-input),
+:deep(.sm-select),
+:deep(.sm-textarea) {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+
+  // Also remove internal margins from children to create hard edges
+  > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  > *:last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+// Preserve SmInput action slot's flexbox alignment (don't let our resets break SUI internals)
+// Also reset padding-top to match sm-field-label
+// NOTE: Full slot alignment fixes moved to sui-overrides.scss
+:deep(.sm-input__action) {
+  display: flex !important;
+  align-items: center !important;
+  padding-top: 0 !important;
+}
+
+// Checkboxes and radios - reset all margins, spacing comes from container gap
+:deep(.sm-checkbox),
+:deep(.sm-radio),
+:deep(.sm-radio-group) {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+
+  // Also remove internal margins from children to create hard edges
+  > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  > *:last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+// Reset top padding on field labels to create hard top edge
+:deep(.sm-field-label) {
+  padding-top: 0 !important;
+}
+
+// Remove margin-bottom from standalone checkbox labels (not in groups)
+// Preserve SUI internal spacing for checkbox groups
+:deep(.sm-checkbox:not(.sm-checkbox-group .sm-checkbox) .sm-checkbox__label) {
+  margin-bottom: 0 !important;
+}
+
+/* PHASE 2: APPLY HYBRID GAP + MARGIN SPACING */
+
+// Level 0: Main form wrapper - gap between major sections
+.form-content-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: $gap-between-form-groups !important;
+}
+
+// Level 1: SmFormGroup - gap between items
+:deep(.sm-form-group) {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: $gap-between-form-rows !important;
+}
+
+// Level 1 headings - margin-bottom for space to content, margin-top when not first child
+:deep(.form-heading-1) {
+  margin-top: 0 !important;
+  margin-bottom: $margin-above-and-below-form-headings !important;
+
+  &:not(:first-child) {
+    margin-top: $margin-above-and-below-form-headings !important;
+  }
+}
+
+// Level 2 headings - margin-bottom for space to content, margin-top when not first child
+:deep(.form-heading-2) {
+  margin-top: 0 !important;
+  margin-bottom: $margin-above-and-below-form-headings !important;
+
+  &:not(:first-child) {
+    margin-top: $margin-above-and-below-form-headings !important;
+  }
+}
+
+// Remove margin-top when level 2 heading immediately follows any other heading
+:deep([class*='form-heading-'] + .form-heading-2),
+:deep([class*='form-heading-'] + h3.form-heading-2) {
+  margin-top: 0 !important;
+}
+
+// Level 3 headings - margin-bottom for space to content, margin-top when not first child
+:deep(.form-heading-3),
+.form-heading-3 {
+  margin-top: 0 !important;
+  margin-bottom: $margin-above-and-below-form-headings !important;
+
+  &:not(:first-child) {
+    margin-top: $margin-above-and-below-form-headings !important;
+  }
+}
+
+// Remove margin-top when level 3 heading immediately follows any other heading
+:deep([class*='form-heading-'] + .form-heading-3),
+:deep([class*='form-heading-'] + h4.form-heading-3) {
+  margin-top: 0 !important;
+}
+
+// Level 4 headings - margin-bottom for space to content, margin-top when not first child
+:deep(.form-heading-4),
+.form-heading-4 {
+  margin-top: 0 !important;
+  margin-bottom: $margin-above-and-below-form-headings !important;
+
+  &:not(:first-child) {
+    margin-top: $margin-above-and-below-form-headings !important;
+  }
+}
+
+// Remove margin-top when level 4 heading immediately follows any other heading
+:deep([class*='form-heading-'] + .form-heading-4),
+:deep([class*='form-heading-'] + h5.form-heading-4) {
+  margin-top: 0 !important;
+}
+
+// Nested containers - use gap for spacing
+// Note: Don't use !important on display for containers with v-show/v-if
+.derived-rate-fields,
+.conditional-form-section,
+.discount-type-section,
+.date-ranges-container,
+.los-rules-section,
+.seasonal-overrides-container,
+.bedrooms-wrapper,
+.inclusions-section {
+  display: flex;
+  flex-direction: column;
+  gap: $gap-between-form-rows !important;
+}
+
+// Add breathing room after conditional sections
+.conditional-form-section:not(:last-child),
+.date-ranges-container:not(:last-child),
+.seasonal-overrides-container:not(:last-child) {
+  margin-bottom: $margin-above-and-below-form-headings !important;
+}
+
+// Nested item containers
+.date-range-item,
+.seasonal-override-content {
+  display: flex;
+  flex-direction: column;
+  gap: $gap-between-form-rows !important;
+}
+
+// Selling points list
+.selling-points-list {
+  display: flex;
+  flex-direction: column;
+  gap: $gap-between-form-rows !important;
+}
+
+/* ============================================
+   DEBUG: CONTAINER BACKGROUND COLORS
+   Visualize hybrid gap+margin spacing
+   Toggle with 'b' key
+   ============================================ */
+
+// Level 0: Main form wrapper (very light blue)
+.form-content-wrapper.show-backgrounds {
+  background-color: rgba(173, 216, 230, 0.1) !important;
+}
+
+// Level 1: SmFormGroup containers (light green)
+.show-backgrounds :deep(.sm-form-group) {
+  background-color: rgba(144, 238, 144, 0.15) !important;
+}
+
+// Heading backgrounds for visibility
+.show-backgrounds :deep(.form-heading-1) {
+  background-color: rgba(100, 149, 237, 0.2) !important;
+}
+
+.show-backgrounds :deep(.form-heading-2) {
+  background-color: rgba(135, 206, 235, 0.2) !important;
+}
+
+.show-backgrounds :deep(.form-heading-3),
+.show-backgrounds .form-heading-3 {
+  background-color: rgba(173, 216, 230, 0.2) !important;
+}
+
+.show-backgrounds :deep(.form-heading-4),
+.show-backgrounds .form-heading-4 {
+  background-color: rgba(176, 224, 230, 0.2) !important;
+}
+
+// Nested containers
+.show-backgrounds .derived-rate-fields,
+.show-backgrounds .conditional-form-section,
+.show-backgrounds .discount-type-section,
+.show-backgrounds .date-ranges-container,
+.show-backgrounds .seasonal-overrides-container,
+.show-backgrounds .los-rules-section,
+.show-backgrounds .edit-fields,
+.show-backgrounds .read-fields,
+.show-backgrounds .form-row {
+  background-color: rgba(255, 255, 224, 0.3) !important;
+}

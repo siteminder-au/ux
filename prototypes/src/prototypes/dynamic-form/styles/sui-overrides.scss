@@ -180,3 +180,14 @@
   display: flex !important;
   align-items: center !important;
 }
+
+// ============================================================================
+// CARD OVERRIDES
+// ============================================================================
+// Remove hover effect from SmCard components
+:deep(.sm-card) {
+  &:hover {
+    box-shadow: none !important;
+    cursor: default !important;
+  }
+}

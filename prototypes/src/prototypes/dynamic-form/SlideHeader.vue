@@ -12,7 +12,7 @@
         <p>
           This prototype demonstrates the SiteMinder form system. For detailed design rules and guidelines, please refer
           to the
-          <a href="https://docs.google.com/document/d/1UtBtOyQRpZGBMSzMFRnFUWTPhpZrVzfe07UqCgNmpII/edit?tab=t.0"
+          <a href="https://siteminder-jira.atlassian.net/wiki/spaces/SMD/pages/305299505/Forms"
             target="_blank" rel="noopener noreferrer">
             Design rules and guidelines document
           </a>.
@@ -35,14 +35,13 @@
           ← Previous
         </button>
 
-        <select class="slide-select" :value="currentSlide" @change="$emit('goToSlide', parseInt($event.target.value))"
-          disabled>
+        <select class="slide-select" :value="currentSlide" @change="$emit('goToSlide', parseInt($event.target.value))">
           <option v-for="(title, slideNum) in slideTitles" :key="slideNum" :value="slideNum">
             {{ title }}
           </option>
         </select>
 
-        <button class="nav-button" disabled @click="$emit('navigate', 'next')">
+        <button class="nav-button" :disabled="isLastSlide" @click="$emit('navigate', 'next')">
           Next →
         </button>
       </div>

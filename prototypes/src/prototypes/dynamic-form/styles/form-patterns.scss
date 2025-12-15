@@ -62,28 +62,28 @@
   }
 }
 
-// Seasonal override card styling
-:deep(.seasonal-override-card.sm-card) {
-  border-radius: 8px;
-  background-color: #f6f6f6;
-  border: 0;
-  cursor: default;
+// Content wrapper inside bedroom cards to use gap instead of margins (same as seasonal overrides)
+.bedroom-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-  // Remove hover effects
-  &:hover {
-    border-color: transparent;
-    box-shadow: none;
-  }
+// Header section inside bedroom cards (same as seasonal overrides)
+.bedroom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 
-  &::before {
-    display: none; // Remove top border on hover
+  // Remove top margin on heading to ensure proper vertical alignment
+  .form-heading-2 {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
   }
 }
 
-// Override card content padding for seasonal override cards
-:deep(.seasonal-override-card .sm-card-content) {
-  padding: 16px !important;
-}
+// Note: Card background and border styling moved to sui-overrides.scss as global SmCard override
 
 // Dynamic Length of Stay Rules - delete column alignment
 .los-delete-col {
@@ -108,15 +108,7 @@
   padding-left: 20px;
 }
 
-.error-link {
-  color: #c70101;
-  text-decoration: underline;
-  cursor: pointer;
-
-  &:hover {
-    color: #a00000;
-  }
-}
+// Error links inherit standard link styles (blue, no underline)
 
 // Derived rate fields container
 .derived-rate-fields {
@@ -136,6 +128,7 @@
 }
 
 // Remove margin under drawer header title
+.sm-drawer__header h2,
 .sm-drawer__header h3 {
   margin-bottom: 0;
 }
@@ -219,4 +212,29 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* ============================================
+   SLIDE3-SPECIFIC STYLES
+   Room rate form patterns
+   ============================================ */
+
+// Inclusions section with lock icons
+// Note: Display, flex-direction, and gap are handled by gap-spacing.scss
+.inclusions-section {
+  .sm-field-label {
+    margin-bottom: 8px;
+  }
+}
+
+.inclusion-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .inclusion-lock-icon {
+    color: #0066cc;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
 }

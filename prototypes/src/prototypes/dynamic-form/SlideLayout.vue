@@ -1,15 +1,8 @@
 <template>
   <div class="slideshow-container">
-    <SlideHeader
-      :current-slide="currentSlide"
-      :total-slides="5"
-      :slide-title="slideTitle"
-      :slide-titles="slideTitles"
-      :is-first-slide="isFirstSlide"
-      :is-last-slide="isLastSlide"
-      @navigate="handleNavigation"
-      @go-to-slide="goToSlide"
-    />
+    <SlideHeader :current-slide="currentSlide" :total-slides="5" :slide-title="slideTitle" :slide-titles="slideTitles"
+      :is-first-slide="isFirstSlide" :is-last-slide="isLastSlide" @navigate="handleNavigation"
+      @go-to-slide="goToSlide" />
 
     <div class="slide-content">
       <component :is="currentSlideComponent" />
@@ -47,9 +40,9 @@ const slideComponents = {
 const slideTitles = {
   1: 'Rate plan',
   2: 'Room rate',
-  3: 'Channel rate',
-  4: 'Room type',
-  5: 'Review & Submit'
+  3: 'Room type',
+  4: 'Channel rate',
+  5: 'Property settings'
 }
 
 const currentSlideComponent = computed(() =>
