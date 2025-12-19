@@ -19,6 +19,12 @@
         <span>Full width form</span>
       </label>
     </div>
+    <div class="toggle-item">
+      <label class="toggle-label">
+        <input type="checkbox" v-model="showMarkup" id="show-markup-toggle" />
+        <span>Show Markup</span>
+      </label>
+    </div>
   </div>
 </template>
 
@@ -26,5 +32,5 @@
 import { useDisplaySettings } from '../composables/useDisplaySettings.js'
 
 // Get shared display settings
-const { showGridOverlay, showContainerBackgrounds, fullWidthForm } = useDisplaySettings()
+const { showGridOverlay, showContainerBackgrounds, fullWidthForm, showMarkup } = useDisplaySettings()
 </script>

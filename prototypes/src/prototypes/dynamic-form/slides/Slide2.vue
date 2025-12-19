@@ -37,7 +37,7 @@
 
       <div class="container-content">
         <SmForm id="room-rate-form" @submit="handleFormSubmit" @invalid-submit="handleInvalidSubmit">
-          <div class="form-content-wrapper" :class="{ 'show-backgrounds': showContainerBackgrounds }">
+          <div class="form-content-wrapper" :class="{ 'show-backgrounds': showContainerBackgrounds, 'show-markup': showMarkup }">
             <GridOverlay :show="showGridOverlay" />
 
             <!-- Error Summary -->
@@ -239,7 +239,7 @@ import { useDisplaySettings } from '../composables/useDisplaySettings.js'
 import rateRef1 from '/images/dynamic-form/rate-1.png'
 import rateRef2 from '/images/dynamic-form/rate-plan-2.png'
 
-const { showGridOverlay, showContainerBackgrounds, fullWidthForm } = useDisplaySettings()
+const { showGridOverlay, showContainerBackgrounds, fullWidthForm, showMarkup } = useDisplaySettings()
 
 // Form data - General Information
 const roomType = ref('Apartment')

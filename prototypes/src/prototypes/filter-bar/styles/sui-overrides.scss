@@ -1,0 +1,26 @@
+// ============================================================================
+// SUI COMPONENT OVERRIDES
+// Filter-bar specific adjustments to SUI components
+// ============================================================================
+
+// Ensure consistent control heights in filter bar
+:deep(.sm-input),
+:deep(.sm-select),
+:deep(.sm-date-picker) {
+  .sm-input__inner,
+  .sm-select__trigger,
+  .sm-date-picker__input {
+    height: 40px;
+  }
+}
+
+// Adjust dropdown positioning for filter context
+:deep(.sm-select__dropdown) {
+  margin-top: 4px;
+}
+
+// Active filter pills styling
+:deep(.sm-tag) {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+}

@@ -4,6 +4,7 @@ import { ref } from 'vue'
 const showGridOverlay = ref(false)
 const showContainerBackgrounds = ref(false)
 const fullWidthForm = ref(false)
+const showMarkup = ref(false)
 
 /**
  * Composable for managing shared display settings across all slides
@@ -13,6 +14,7 @@ export function useDisplaySettings() {
   return {
     showGridOverlay,
     showContainerBackgrounds,
-    fullWidthForm
+    fullWidthForm,
+    showMarkup
   }
 }

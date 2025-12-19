@@ -1,0 +1,87 @@
+// ============================================================================
+// VERTICAL LAYOUT (top-to-bottom stacking)
+// ============================================================================
+// Different from dynamic-form's horizontal 50/50 split
+
+.slideshow-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #e8e8e8;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.slide-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.slide-wrapper {
+  display: flex;
+  flex-direction: column;  // Stack vertically (KEY DIFFERENCE)
+  width: 100%;
+  gap: 1rem;
+}
+
+// TOP section: Proposed filter bar
+.slide-top {
+  width: 100%;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+
+// BOTTOM section: Reference images
+.slide-bottom {
+  width: 100%;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.container-header {
+  padding: 1rem 1.5rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid #e0e0e0;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.container-content {
+  padding: 1.5rem;
+  flex: 1;
+}
+
+// Proposed section with reduced padding
+.slide-top .container-content {
+  padding: 20px;
+}
+
+// Reference images styling
+.slide-bottom .container-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  img {
+    width: 100%;
+    height: auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+}
+
+@media (max-width: 768px) {
+  .slideshow-container {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+}

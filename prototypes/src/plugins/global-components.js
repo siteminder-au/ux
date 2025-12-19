@@ -21,8 +21,10 @@ import SmTag from '@sui/app/components/sm-tag/sm-tag.vue'
 import SmForm from '@sui/app/components/forms/sm-form/sm-form.vue'
 import SmInput from '@sui/app/components/forms/sm-input/sm-input.vue'
 import SmInputPrefixContent from '@sui/app/components/forms/sm-input/sm-input-prefix-content.vue'
+import SmInputSuffixContent from '@sui/app/components/forms/sm-input/sm-input-suffix-content.vue'
 import SmFormGroup from '@sui/app/components/forms/sm-form-group/sm-form-group.vue'
 import SmSelect from '@sui/app/components/forms/sm-select/sm-select.vue'
+import SmMultiSelect from '@sui/app/components/forms/sm-multi-select/sm-multi-select.vue'
 import SmRadio from '@sui/app/components/forms/sm-radio/sm-radio.vue'
 import SmRadioGroup from '@sui/app/components/forms/sm-radio/sm-radio-group.vue'
 import SmCheckbox from '@sui/app/components/forms/sm-checkbox/sm-checkbox.vue'
@@ -54,8 +56,10 @@ export default {
     app.component('SmForm', SmForm)
     app.component('SmInput', SmInput)
     app.component('SmInputPrefixContent', SmInputPrefixContent)
+    app.component('SmInputSuffixContent', SmInputSuffixContent)
     app.component('SmFormGroup', SmFormGroup)
     app.component('SmSelect', SmSelect)
+    app.component('SmMultiSelect', SmMultiSelect)
     app.component('SmRadio', SmRadio)
     app.component('SmRadioGroup', SmRadioGroup)
     app.component('SmCheckbox', SmCheckbox)

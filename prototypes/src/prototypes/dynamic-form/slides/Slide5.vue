@@ -18,7 +18,7 @@
     <div class="slide-right">
       <div class="container-header">Proposed</div>
       <div class="container-content">
-        <div class="form-content-wrapper" :class="{ 'show-backgrounds': showContainerBackgrounds }">
+        <div class="form-content-wrapper" :class="{ 'show-backgrounds': showContainerBackgrounds, 'show-markup': showMarkup }">
 
                 <!-- Currency Card -->
                 <SmCard class="settings-card">
@@ -359,7 +359,7 @@ import editModeRef2 from '/images/dynamic-form/property-settings/propery-setting
 import readModeRef3 from '/images/dynamic-form/property-settings/propery-settings-5.png'
 import editModeRef3 from '/images/dynamic-form/property-settings/propery-settings-6.png'
 
-const { showGridOverlay, showContainerBackgrounds, fullWidthForm } = useDisplaySettings()
+const { showGridOverlay, showContainerBackgrounds, fullWidthForm, showMarkup } = useDisplaySettings()
 
 // Edit state tracking
 const editingCurrency = ref(false)

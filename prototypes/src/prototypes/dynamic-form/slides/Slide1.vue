@@ -35,7 +35,7 @@
       <div class="container-content">
         <!-- Form Content -->
         <SmForm id="rate-plan-form" @submit="handleFormSubmit" @invalid-submit="handleInvalidSubmit">
-          <div class="form-content-wrapper" :class="{ 'show-backgrounds': showContainerBackgrounds }">
+          <div class="form-content-wrapper" :class="{ 'show-backgrounds': showContainerBackgrounds, 'show-markup': showMarkup }">
             <!-- Grid Overlay -->
             <GridOverlay :show="showGridOverlay" />
 
@@ -569,7 +569,7 @@
                     </SmInput>
 
                     <div>
-                      <h5 class="form-heading-4">Key selling points</h5>
+                      <label class="sm-field-label">Key selling points</label>
                       <ol class="selling-points-list">
                           <li v-for="(point, index) in highlightKeySellingPoints" :key="index" class="selling-point-item"
                             draggable="true" @dragstart="handleSellingPointDragStart(index)"
@@ -666,7 +666,7 @@ const restrictRateToMobile = ref(false)
 const highlightRatePlan = ref(false)
 
 // Display settings (shared across all slides)
-const { showGridOverlay, showContainerBackgrounds, fullWidthForm } = useDisplaySettings()
+const { showGridOverlay, showContainerBackgrounds, fullWidthForm, showMarkup } = useDisplaySettings()
 
 // Highlight on booking engine fields
 const highlightTagline = ref('')

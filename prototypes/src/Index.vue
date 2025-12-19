@@ -34,6 +34,12 @@ const prototypes = [
     description: 'Dynamic form ux exploration and guidelines',
     path: '/dynamic-form'
   },
+  {
+    id: 'filter-bar',
+    name: 'Filter Bar',
+    description: 'Filter bar component patterns with responsive behavior',
+    path: '/filter-bar'
+  },
 ]
 </script>
 
